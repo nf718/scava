@@ -5,11 +5,12 @@ import java.util.Date;
 
 import org.eclipse.scava.repository.model.CommunicationChannel;
 
-public class CommunicationChannelForum implements Serializable {
+public class CommunicationChannelTopic implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private String forum_id;
+	private String topic_id;
 	private String name;
 	private String description;
 	private String url;
@@ -81,6 +82,30 @@ public class CommunicationChannelForum implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+
+	/**
+	 * @return the forum_id
+	 */
+	public String getForum_id() {
+		return forum_id;
+	}
+
+
+	/**
+	 * @return the topic_id
+	 */
+	public String getTopic_id() {
+		return topic_id;
+	}
+
+
+	/**
+	 * @param topic_id the topic_id to set
+	 */
+	public void setTopic_id(String topic_id) {
+		this.topic_id = topic_id;
 	}
 	
 	

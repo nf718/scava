@@ -1,0 +1,9 @@
+<plugin>
+   <extension
+         point="org.eclipse.scava.platform.managers.bugtracking">
+      <bugtracker
+            manager="org.eclipse.scava.platform.bugtrackingsystem.gitlabb.GitlabbManager">
+      </bugtracker>
+   </extension>
+
+</plugin>

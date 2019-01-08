@@ -256,8 +256,7 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 
 	@Override
 	public String getSummaryInformation() {
-		return "This metric computes if each bug comment or newsgroup article is a " +
-				"request of a reply.";
+		return "This metric computes the sentiment of each bug comment, newsgroup article or forum post";
 	}
 
 }

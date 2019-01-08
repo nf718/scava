@@ -1,0 +1,76 @@
+{
+	"properties": {
+		"project": {
+			"type": "keyword"
+		},
+		"bug_id": {
+			"type": "integer"
+		},
+		"summary": {
+			"type": "text"
+		},
+		"created_at": {
+			"type": "date"
+		},
+		"closed_at": {
+			"type": "date"
+		},
+		"updated_at": {
+			"type": "date"
+		},
+		"number_of_comments": {
+			"type": "integer"
+		},
+		
+		"label": {
+			"type": "keyword"
+		},
+		"body": {
+			"type": "text"
+		},
+		"processed_body": {
+			"type": "text"
+		},
+		"assignee": {
+			"type": "keyword"
+		},
+		"html_url": {
+			"type": "keyword"
+		},
+		"url": {
+			"type": "text"
+		},
+		"creator": {
+			"type": "keyword"
+		},
+		"contains_code": {
+			"type": "boolean"
+		},
+		"severity": {
+			"type": "keyword"
+		},
+		"sentiment": {
+			"type": "keyword"
+		},
+		"emotion": {
+			"type": "keyword"
+		},
+		"request": {
+			"type": "boolean"
+		},
+		"comments":{
+			"properties" : {
+				"body" : {"type" : "text"},
+				"creator" : {"type" : "keyword"},
+				"created_at" : {"type" : "date"},
+				"updated_at" : {"type" : "date"},
+				"url" : {"type" : "text"},
+				"contains_code": { "type": "boolean"},
+			    "severity": {"type": "keyword"},
+			    "sentiment": {"type": "keyword"},
+			    "emotion": {"type": "keyword"},
+			    "request": {"type": "boolean"}
+			}
+		}
+	}
+}

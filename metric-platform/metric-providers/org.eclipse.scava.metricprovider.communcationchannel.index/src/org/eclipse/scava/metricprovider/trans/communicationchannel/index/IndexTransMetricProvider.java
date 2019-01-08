@@ -34,10 +34,11 @@ import org.eclipse.scava.repository.model.sourceforge.Discussion;
 import com.mongodb.DB;
 
 /**
- * This class is responsible for preparing data contained within the communication channel deltas in a format that is accepted by the IndexerTool 
+ * This class is responsible for preparing data contained within the communication channel deltas in a format that is accepted by the Indexing Tool 
  * 
  * TODO - Enable NL Fields once models/classifiers are complete
  * TODO - Add Mappings
+ * TODO - Drop database tables
  * 
  * @author Dan Campbell
  */
@@ -46,6 +47,7 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 	protected PlatformCommunicationChannelManager communicationChannelManager;
 	protected List<IMetricProvider> uses;
 	protected MetricProviderContext context;
+	protected String knowledgeType = "nlp";
 
 	@Override
 	public String getIdentifier() {
@@ -54,18 +56,18 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 
 	@Override
 	public String getShortIdentifier() {
-		return "CcIndexer";
+		return "CommunicationChannelCIndexerPrep";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "CommunicationChannelIndexer";
+		return "CommunicationChannelIndexPreperation";
 	}
 
 	@Override
 	public String getSummaryInformation() {
 
-		return "This metric is responsible for preparing communication channel documents for the Indexer tool";
+		return "This metric is responsible for preparing communication channel documents for the Indexing";
 	}
 
 	@Override
@@ -107,6 +109,8 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 
 	@Override
 	public IndexTransMetric adapt(DB db) {
+		
+	
 		return new IndexTransMetric(db);
 	}
 
@@ -130,6 +134,8 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 				prepareEclipseFourm(project, communicationChannel, communicationChannelDelta, projectDelta);
 				}	
 			}
+		
+		clearDB(db);
 		}
 
 	// ------------------------------------------------------------------------------------------
@@ -152,13 +158,13 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		for (CommunicationChannelArticle article: communicationChannelDelta.getArticles()) {
 			
 			String communicationChannelType = article.getCommunicationChannel().getNewsGroupName();
-			String documentType = "article";
-			String indexName = generateIndexName(communicationChannelType, documentType);
+			String documentType = "newsgrouparticle";
+			String indexName = Indexer.generateIndexName(communicationChannelType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, article.getArticleId(), communicationChannelType);
 			String mapping = loadMapping(indexName);
 			
 			ArticleDocument articleDocument = articleObjMap(article, project.getName(), uid);			
-			Indexer.performIndexing(indexName, mapping, communicationChannelType, documentType, uid, articleDocument);
+			Indexer.performIndexing(indexName, mapping, documentType, uid, articleDocument);
 		}
 	}
 
@@ -176,29 +182,31 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		for (CommunicationChannelArticle article : communicationChannelDelta.getArticles()) {
 			String documentType = "discussion";
 			try {
-				/* This handles SourceForge. If the article cannot be casted, an exception is
-				 * raised and it is handled as a regular Communication Channel Article. */
+				/* This handles SourceForge. 
+				 * 
+				 * If the article cannot be casted, an exception is
+				 * raised and it is handled as a Zendesk article. */
 
 				SourceForgeArticle sourceForgeArticle = (SourceForgeArticle) article;
 				String communicationChannelType = sourceForgeArticle.getCommunicationChannel().getNewsGroupName();
-				String indexName = generateIndexName(communicationChannelType, documentType);
+				String indexName =  Indexer.generateIndexName(communicationChannelType, documentType, knowledgeType);
 				String uid = generateUniqueDocumentId(projectDelta, article.getArticleId(), communicationChannelType);
 				String mapping = loadMapping(indexName);
 				SourceForgeArticleDocument articleDocument = sourceForgeArticleObjMap(sourceForgeArticle, project.getName(), uid);
 
-				Indexer.performIndexing(indexName, mapping, communicationChannelType, documentType, uid,
+				Indexer.performIndexing(indexName, mapping, documentType, uid,
 						articleDocument);
 
 			} catch (ClassCastException cce) {
 
 				// ZENDESK
 				String communicationChannelType = article.getCommunicationChannel().getNewsGroupName();
-				String indexName = generateIndexName(communicationChannelType, documentType);
+				String indexName =  Indexer.generateIndexName(communicationChannelType, documentType, knowledgeType);
 				String uid = generateUniqueDocumentId(projectDelta, article.getArticleId(), communicationChannelType);
 				String mapping = loadMapping(indexName);
 				ArticleDocument articleDocument = articleObjMap(article, project.getName(), uid);
 
-				Indexer.performIndexing(indexName, mapping, communicationChannelType, documentType, uid,
+				Indexer.performIndexing(indexName, mapping, documentType, uid,
 						articleDocument);
 			}
 		}
@@ -216,12 +224,12 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		for (CommuincationChannelForumPost post : communicationChannelDelta.getPosts()) {
 			String communicationChannelType = "eclipse_forum";
 			String documentType = "post";
-			String indexName = generateIndexName(communicationChannelType, documentType);
+			String indexName = Indexer.generateIndexName(communicationChannelType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, post.getPostId(), communicationChannelType);
 			String mapping = loadMapping(indexName);
 			
 			ForumPostDocument forumPostDocument = articleObjMap(post, project.getName(), uid);			
-			Indexer.performIndexing(indexName, mapping, communicationChannelType, documentType, uid, forumPostDocument);	
+			Indexer.performIndexing(indexName, mapping, documentType, uid, forumPostDocument);	
 		}
 	}
 
@@ -246,19 +254,7 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		return uid;
 	}
 	
-	/**
-	 * Generates a index name based upon the bug tracker type and document type
-	 * 
-	 * @param communicationChannelType
-	 * @param documentType
-	 * @return String
-	 */
-	private String generateIndexName(String communicationChannelType, String documentType) {
-		
-		String indexName = communicationChannelType +"."+ documentType;
-		
-		return indexName;
-	}
+	
 
 	/**
 	 * Loads the mapping for a particular index from the 'mappings'directory
@@ -395,7 +391,7 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 	private ForumPostDocument articleObjMap(CommuincationChannelForumPost post, String projectName, String uid) {
 		ForumPostDocument forumPostDocument = new ForumPostDocument();
 		forumPostDocument.setBody(post.getText());
-		forumPostDocument.setCreated_at(post.getDate());
+		forumPostDocument.setCreated_at(post.getDate().toJavaDate());
 		forumPostDocument.setCreator(post.getUser());
 		forumPostDocument.setPostId(post.getPostId());
 		forumPostDocument.setProject(projectName);
@@ -409,6 +405,13 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 //		forumPostDocument.setSentiment(sentiment);
 //		forumPostDocument.setSeverity(severity);
 		
+
 		return forumPostDocument;
+	}
+	
+	private void clearDB(IndexTransMetric db) {
+		
+		//TODO DROP DB TABLES!
+		//db.sync();
 	}
 }

@@ -1,45 +1,54 @@
 {
   "properties": {
-    "project": {
+    "bug_id": {
       "type": "keyword"
     },
-    "bug_id": {
-      "type": "integer"
-    },
-    "summary": {
-      "type": "text"
-    },
     "created_at": {
-      "type": "date"
-    },
-    "closed_at": {
       "type": "date"
     },
     "updated_at": {
       "type": "date"
     },
-    "number_of_comments": {
-      "type": "integer"
+    "summary": {
+      "type": "keyword"
     },
-    "label": {
+    "status": {
+      "type": "keyword"
+    },
+    "resolution": {
+      "type": "keyword"
+    },
+    "priority": {
+      "type": "keyword"
+    },
+    "creator": {
       "type": "keyword"
     },
     "body": {
-      "type": "text"
-    },
-    "processed_body": {
-      "type": "text"
+      "type": "keyword"
     },
     "assignee": {
       "type": "keyword"
     },
-    "html_url": {
+    "view_state": {
       "type": "keyword"
     },
-    "url": {
+    "tags": {
       "type": "keyword"
     },
-    "creator": {
+    "platform": {
+      "type": "keyword"
+    },
+    "reproducibility": {
+      "type": "keyword"
+    },
+    "operating_system": {
+      "type": "keyword"
+    },
+    "os_build": {
+      "type": "keyword"
+    },
+    "notes": {
       "type": "keyword"
     },
     "contains_code": {

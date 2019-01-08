@@ -10,7 +10,10 @@
 package org.eclipse.scava.platform.bugtrackingsystem.github;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.scava.platform.bugtrackingsystem.github.utils.GitHubReaderUtils;
 import org.eclipse.scava.workflow.restmule.generated.client.github.model.PullRequest;
@@ -51,6 +54,8 @@ public class GitHubPullRequest implements Serializable {
     private String assignee;
     private String mergedBy;
     private String user;
+    
+    private List<GitHubComment> pullRequestComments  = new ArrayList<>();
 
 	// ----------------------------------------------------------------------------------
 	// Setters
@@ -351,5 +356,19 @@ public class GitHubPullRequest implements Serializable {
     public GitHubPullRequestMarker getHead() {
         return head;
     }
+
+	/**
+	 * @return the pullRequestComments
+	 */
+	public List<GitHubComment> getPullRequestComments() {
+		return pullRequestComments;
+	}
+
+	/**
+	 * @param pullRequestComments the pullRequestComments to set
+	 */
+	public void addPullRequestComment(GitHubComment pullRequestComment) {
+		this.pullRequestComments.add(pullRequestComment);
+	}
 
 }

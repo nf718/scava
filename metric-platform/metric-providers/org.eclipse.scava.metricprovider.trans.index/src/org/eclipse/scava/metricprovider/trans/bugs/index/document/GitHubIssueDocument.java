@@ -20,7 +20,7 @@ public class GitHubIssueDocument extends Document{
 	String assignee;
 	String html_url;
 	String url;
-	List<BugTrackingSystemComment> comments;
+	List<GitHubCommentDocument> comments;
 	
 	int number_of_comments;
 	
@@ -123,11 +123,11 @@ public class GitHubIssueDocument extends Document{
 		this.closed_at = closed_at;
 	}
 
-	public List<BugTrackingSystemComment> getComments() {
+	public List<GitHubCommentDocument> getComments() {
 		return comments;
 	}
 
-	public void setComments(List<BugTrackingSystemComment> comments) {
+	public void setComment(List<GitHubCommentDocument> comments) {
 		this.comments = comments;
 	}
 

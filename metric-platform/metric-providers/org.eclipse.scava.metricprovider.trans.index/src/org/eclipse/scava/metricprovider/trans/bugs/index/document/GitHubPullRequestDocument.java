@@ -8,6 +8,7 @@ public class GitHubPullRequestDocument extends Document{
 	Boolean is_merged;
 	Date closed_at;
 	Date merged_at;
+	String title;
 	int additions;
 	int number_of_comments;
 	int number_of_commits;
@@ -240,6 +241,18 @@ public class GitHubPullRequestDocument extends Document{
 	 */
 	public void setMergable(Boolean mergable) {
 		this.mergable = mergable;
+	}
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 

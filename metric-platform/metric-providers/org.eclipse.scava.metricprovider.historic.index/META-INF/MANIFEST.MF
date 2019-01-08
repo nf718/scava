@@ -18,7 +18,11 @@ Require-Bundle: org.eclipse.scava.index.indexer;bundle-version="1.0.0",
  org.eclipse.scava.metricprovider.trans.bugs.emotions,
  org.eclipse.scava.metricprovider.historic.bugs.sentiment,
  org.eclipse.scava.metricprovider.trans.bugs.bugmetadata,
- org.eclipse.osgi
+ org.eclipse.osgi,
+ org.eclipse.scava.metricprovider.trans.requestreplyclassification,
+ org.eclipse.scava.metricprovider.trans.topics,
+ org.eclipse.scava.metricprovider.trans.newsgroups.emotions,
+ org.eclipse.scava.repository.model.cc.eclipseforums
 Export-Package: org.eclipse.scava.metricprovider.historic.index,
  org.eclipse.scava.metricprovider.historic.index.model
 Bundle-ActivationPolicy: lazy

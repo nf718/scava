@@ -3,7 +3,8 @@ package org.eclipse.scava.platform.delta.communicationchannel;
 
 
 import java.io.Serializable;
-import java.util.Date;
+
+import org.eclipse.scava.platform.Date;
 import org.eclipse.scava.repository.model.CommunicationChannel;
 
 public class CommuincationChannelForumPost implements Serializable {
@@ -15,6 +16,7 @@ public class CommuincationChannelForumPost implements Serializable {
 	private String user;
 	private Date date;
 	private String PostId;
+	private String forumId;
 	transient private CommunicationChannel communicationChannel;// need to modify
 
 	public CommunicationChannel getCommunicationChannel() {
@@ -23,8 +25,6 @@ public class CommuincationChannelForumPost implements Serializable {
 	public void setCommunicationChannel(CommunicationChannel communicationChannel) {
 		this.communicationChannel = communicationChannel;
 	}
-	private String forumId;
-	
 	
 	public String getPostId() {
 		return PostId;

@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.scava.metricprovider.trans.bugs.index.document.BitbucketCommentDocument;
 import org.eclipse.scava.metricprovider.trans.bugs.index.document.BitbucketIssueDocument;
+import org.eclipse.scava.metricprovider.trans.bugs.index.document.GitHubCommentDocument;
 import org.eclipse.scava.metricprovider.trans.bugs.index.document.GitHubIssueDocument;
 import org.eclipse.scava.metricprovider.trans.bugs.index.document.GitHubPullRequestDocument;
 import org.eclipse.scava.metricprovider.trans.bugs.index.document.JiraCommentDocument;
@@ -20,12 +21,14 @@ import org.eclipse.scava.metricprovider.trans.bugs.index.document.MantisIssueDoc
 import org.eclipse.scava.metricprovider.trans.bugs.index.document.RedmineCommentDocument;
 import org.eclipse.scava.metricprovider.trans.bugs.index.document.RedmineIssueDocument;
 import org.eclipse.scava.metricprovider.trans.bugs.index.model.IndexTransMetric;
+import org.eclipse.scava.metricprovider.trans.detectingcode.model.DetectingCodeTransMetric;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;
 import org.eclipse.scava.platform.bugtrackingsystem.bitbucket.api.BitbucketIssue;
 import org.eclipse.scava.platform.bugtrackingsystem.bitbucket.api.BitbucketIssueComment;
 import org.eclipse.scava.platform.bugtrackingsystem.github.GitHubBugTrackingSystemDelta;
+import org.eclipse.scava.platform.bugtrackingsystem.github.GitHubComment;
 import org.eclipse.scava.platform.bugtrackingsystem.github.GitHubIssue;
 import org.eclipse.scava.platform.bugtrackingsystem.github.GitHubPullRequest;
 import org.eclipse.scava.platform.bugtrackingsystem.jira.api.JiraComment;
@@ -46,7 +49,7 @@ import org.eclipse.scava.index.indexer.Indexer;
 import com.mongodb.DB;
 
 /**
- * This class is responsible for preparing data contained within the bug tracking system deltas in a format that is accepted by the IndexerTool 
+ * This class is responsible for preparing data contained within the bug tracking system deltas in a format that is accepted by the Indexing Tool 
  * 
  * TODO - Enable NL Fields once models/classifiers are complete
  * TODO - Add Mappings
@@ -58,6 +61,8 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 	protected PlatformBugTrackingSystemManager platformBugTrackingSystemManager;
 	protected List<IMetricProvider> uses;
 	protected MetricProviderContext context;
+	
+	protected String knowledgeType = "nlp";
 
 	@Override
 	public String getIdentifier() {
@@ -66,18 +71,18 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 
 	@Override
 	public String getShortIdentifier() {
-		return "BugIndexer";
+		return "BugIndexerPrep";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "BugTrackerIndexer";
+		return "BugTrackerIndexPreperation";
 	}
 
 	@Override
 	public String getSummaryInformation() {
 
-		return "This metric is responsible for preparing bugtracking system documents for the Indexer tool";
+		return "This metric is responsible for preparing bug tracking system documents for the Indexing";
 	}
 
 	@Override
@@ -145,10 +150,13 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 				prepareBugzilla(project, bugTrackingSystemDelta, projectDelta); //pending york
 				break;
 			case "jira":
-				prepareJira(project, bugTrackingSystemDelta, projectDelta); //need source
+				prepareJira(project, bugTrackingSystemDelta, projectDelta); //need source to check
 				break;
 			}
 		}
+		
+	
+		clearDB(db);
 	}
 	
 	// ------------------------------------------------------------------------------------------
@@ -168,42 +176,41 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 	 */
 	private void prepareGitHub(Project project, BugTrackingSystemDelta bugTrackingSystemDelta, ProjectDelta projectDelta) {
 		
-		//Question - Do we index comments in their own index or as an array in issues/pull requests
-		
 		GitHubBugTrackingSystemDelta githubDelta = (GitHubBugTrackingSystemDelta) bugTrackingSystemDelta;
 		String bugTrackerType = githubDelta.getBugTrackingSystem().getBugTrackerType();
 
 		for (BugTrackingSystemBug bug : githubDelta.getNewBugs()) {
 			
 			GitHubIssue issue = (GitHubIssue) bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			GitHubIssueDocument githubIssueDocument = gitHubIssueObjMap(issue, project.getName(), uid);
 			
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, githubIssueDocument);
+			Indexer.performIndexing(indexName, mapping, documentType, uid, githubIssueDocument);
 		}
 		
 		for (BugTrackingSystemBug bug : githubDelta.getUpdatedBugs()) {
 		
 			GitHubIssue issue = (GitHubIssue) bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			GitHubIssueDocument githubIssueDocument = gitHubIssueObjMap(issue, project.getName(), uid);
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, githubIssueDocument);
+			
+			Indexer.performIndexing(indexName, mapping, documentType, uid, githubIssueDocument);
 		}
 		
 		for (GitHubPullRequest pullRequest : githubDelta.getPullRequests()) {
 			
-			String documentType = "pull_request";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "pullrequest";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, pullRequest.getId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			GitHubPullRequestDocument githubPullRequestDocument = gitHubPullRequestObjMap(pullRequest, project.getName(), uid);
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, githubPullRequestDocument);
+			Indexer.performIndexing(indexName, mapping, documentType, uid, githubPullRequestDocument);
 		}
 	}
 
@@ -221,23 +228,23 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		for (BugTrackingSystemBug bug : bugTrackingSystemDelta.getNewBugs()) {
 			
 			MantisIssue issue = (MantisIssue)bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			MantisIssueDocument mantisIssueDocument = mantisIssueObjMap(issue, project.getName(), uid);
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, mantisIssueDocument);
+			Indexer.performIndexing(indexName, mapping, documentType, uid, mantisIssueDocument);
 		}
 		
 		for (BugTrackingSystemBug bug : bugTrackingSystemDelta.getUpdatedBugs()) {
 			
 			MantisIssue issue = (MantisIssue)bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			MantisIssueDocument mantisIssueDocument = mantisIssueObjMap(issue, project.getName(), uid);
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, mantisIssueDocument);
+			Indexer.performIndexing(indexName, mapping, documentType, uid, mantisIssueDocument);
 		}
 
 	}
@@ -251,42 +258,33 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 	 */
 	private void prepareBitbucket(Project project, BugTrackingSystemDelta bugTrackingSystemDelta, ProjectDelta projectDelta) {
 		
+		//TODO INCLUDE COMMENTS IN ISSUES
 		String bugTrackerType = bugTrackingSystemDelta.getBugTrackingSystem().getBugTrackerType();
 		
 		for (BugTrackingSystemBug bug : bugTrackingSystemDelta.getNewBugs()) {
 			
 			BitbucketIssue issue = (BitbucketIssue)bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			BitbucketIssueDocument bitbucketIssueDocument = bitbucketIssueObjMap(issue, project.getName(), uid);
 			
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, bitbucketIssueDocument);
+			Indexer.performIndexing(indexName, mapping, documentType, uid, bitbucketIssueDocument);
 		}	
 		
 		for (BugTrackingSystemBug bug : bugTrackingSystemDelta.getUpdatedBugs()) {
 			
 			BitbucketIssue issue = (BitbucketIssue)bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			BitbucketIssueDocument bitbucketIssueDocument = bitbucketIssueObjMap(issue, project.getName(), uid);
 			String mapping = loadMapping(indexName);
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, bitbucketIssueDocument);
+			Indexer.performIndexing(indexName, mapping, documentType, uid, bitbucketIssueDocument);
 		}	
 		
-		for (BugTrackingSystemComment comment : bugTrackingSystemDelta.getComments()) {
-			
-			BitbucketIssueComment issue = (BitbucketIssueComment)comment;
-			String documentType = "comment";
-			String indexName = generateIndexName(bugTrackerType, documentType);
-			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
-			String mapping = loadMapping(indexName);
-			BitbucketCommentDocument bitbucketIssueDocument = bitbucketCommentObjMap(issue, project.getName(), uid);
-			
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, bitbucketIssueDocument);
-		}	
+		
 	}
 	
 
@@ -304,43 +302,44 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		for (BugTrackingSystemBug bug : bugTrackingSystemDelta.getNewBugs()) {
 			
 			JiraIssue issue = (JiraIssue)bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			JiraIssueDocument bitbucketIssueDocument = jiraIssueObjMap(issue, project.getName(), uid);
 			
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, bitbucketIssueDocument);
+			Indexer.performIndexing(indexName, mapping, documentType, uid, bitbucketIssueDocument);
 		
 		}
 		
 		for (BugTrackingSystemBug bug : bugTrackingSystemDelta.getNewBugs()) {
+			String bugId = bug.getBugId();
+			
 			
 			JiraIssue issue = (JiraIssue)bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			JiraIssueDocument bitbucketIssueDocument = jiraIssueObjMap(issue, project.getName(), uid);
 		
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, bitbucketIssueDocument);
+			Indexer.performIndexing(indexName, mapping,  documentType, uid, bitbucketIssueDocument);
 		}
 		
 		for (BugTrackingSystemComment comment : bugTrackingSystemDelta.getComments()) {
 			
 			JiraComment jiraComment = (JiraComment)comment;
 			String documentType = "comment";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, jiraComment.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			JiraCommentDocument jiraCommentDocument = jiraCommentObjMap(jiraComment, project.getName(), uid);
 			
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, jiraCommentDocument);
+			Indexer.performIndexing(indexName, mapping,  documentType, uid, jiraCommentDocument);
 		
 		}
 	}
 	
-
 	/**
 	 * prepares Bugzilla bug tracking system delta objects for indexing
 	 * 
@@ -379,9 +378,24 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		
 		for (BugTrackingSystemBug bug : bugTrackingSystemDelta.getNewBugs()) {
 			
+
+//			GitLabIssue issue = (GitLabIssue ) bug;
+//			String documentType = "bug";
+//			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
+//			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
+//			String mapping = loadMapping(indexName);
+//			GitLabIssueDocument githubIssueDocument = GitLabIssueDocumentObjMap(issue, project.getName(), uid);
+			
 		}
 		
 		for (BugTrackingSystemBug bug : bugTrackingSystemDelta.getUpdatedBugs()) {
+			
+//			GitLabIssue issue = (GitLabIssue ) bug;
+//			String documentType = "bug";
+//			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
+//			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
+//			String mapping = loadMapping(indexName);
+//			GitLabIssueDocument githubIssueDocument = GitLabIssueDocumentObjMap(issue, project.getName(), uid);
 			
 		}
 		
@@ -405,37 +419,37 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		for (BugTrackingSystemBug bug : redmineDelta.getNewBugs()) {
 			
 			RedmineIssue issue = (RedmineIssue) bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			RedmineIssueDocument githubIssueDocument = redmineIssueObjMap(issue, project.getName(), uid);
 			
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, githubIssueDocument);
+			Indexer.performIndexing(indexName, mapping,  documentType, uid, githubIssueDocument);
 		}
 		
 		for (BugTrackingSystemBug bug : redmineDelta.getUpdatedBugs()) {
 		
 			RedmineIssue issue = (RedmineIssue) bug;
-			String documentType = "issue";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String documentType = "bug";
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, issue.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			RedmineIssueDocument githubIssueDocument = redmineIssueObjMap(issue, project.getName(), uid);
 			
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, githubIssueDocument);
+			Indexer.performIndexing(indexName, mapping,  documentType, uid, githubIssueDocument);
 		}
 		
 		for (BugTrackingSystemComment comment : redmineDelta.getComments()) {
 			
 			RedmineComment RedmineComment = (RedmineComment)comment;
 			String documentType = "comment";
-			String indexName = generateIndexName(bugTrackerType, documentType);
+			String indexName = Indexer.generateIndexName(bugTrackerType, documentType, knowledgeType);
 			String uid = generateUniqueDocumentId(projectDelta, comment.getBugId(), bugTrackerType);
 			String mapping = loadMapping(indexName);
 			RedmineCommentDocument commentDocument = redmineCommentObjMap(RedmineComment, project.getName(), uid);
 			
-			Indexer.performIndexing(indexName, mapping, bugTrackerType, documentType, uid, commentDocument);
+			Indexer.performIndexing(indexName, mapping,  documentType, uid, commentDocument);
 		}
 		
 
@@ -462,19 +476,7 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		return uid;
 	}
 	
-	/**
-	 * Generates a index name based upon the bug tracker type and document type
-	 * 
-	 * @param bugTrackerType
-	 * @param documentType
-	 * @return String
-	 */
-	private String generateIndexName(String bugTrackerType, String documentType) {
-		
-		String indexName = bugTrackerType +"."+ documentType;
-		
-		return indexName;
-	}
+
 
 	/**
 	 * Loads the mapping for a particular index from the 'mappings'directory
@@ -560,7 +562,18 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		gitIssueDoc.setUid(uid);
 		gitIssueDoc.setUpdated_at(issue.getUpdatedTime());
 		gitIssueDoc.setUrl(issue.getUrl());
-		gitIssueDoc.setComments(issue.getComments());
+		
+		
+		if (!issue.getGithubComments().isEmpty()) {
+		List<GitHubCommentDocument> comments = new ArrayList<>();
+		for(GitHubComment comment : issue.getGithubComments()) {
+			
+			comments.add(gitHubCommentObjMap(comment));
+			
+		}
+		
+		gitIssueDoc.setComment(comments);
+		}
 		
 		// NLP METRIC INFORMATION
 		// gitIssueDoc.setContains_code();
@@ -581,10 +594,10 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 	 * @param uid
 	 * @return GitHubPullRequestDocument
 	 */
-	private GitHubPullRequestDocument gitHubPullRequestObjMap(GitHubPullRequest pullRequest, String projectName, String uid) {
+	private GitHubPullRequestDocument gitHubPullRequestObjMap(GitHubPullRequest pullRequest, String projectName, String uid) throws NullPointerException{
 	
 		GitHubPullRequestDocument gitHubPullRequestDocument = new GitHubPullRequestDocument();
-		
+		gitHubPullRequestDocument.setTitle(pullRequest.getTitle());
 		gitHubPullRequestDocument.setBody(pullRequest.getBody());
 		gitHubPullRequestDocument.setClosed_at(pullRequest.getClosedAt());
 		gitHubPullRequestDocument.setCreated_at(pullRequest.getCreatedAt());
@@ -597,7 +610,11 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		gitHubPullRequestDocument.setIs_merged(pullRequest.isMerged());
 		gitHubPullRequestDocument.setMerged_at(pullRequest.getMergedAt());
 		gitHubPullRequestDocument.setMerged_by(pullRequest.getMergedBy());
-		gitHubPullRequestDocument.setMilestone(pullRequest.getMilestone());
+		
+		//gitHubPullRequestDocument.setMilestone(pullRequest.getMilestone());
+			
+		
+		
 		gitHubPullRequestDocument.setNumber(pullRequest.getNumber());
 		gitHubPullRequestDocument.setNumber_of_comments(pullRequest.getComments());
 		gitHubPullRequestDocument.setNumber_of_commits(pullRequest.getCommits());
@@ -619,6 +636,31 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 //		gitHubPullRequestDocument.setSeverity(severity);
 		
 		return gitHubPullRequestDocument; 
+	}
+	
+	
+	private GitHubCommentDocument gitHubCommentObjMap(GitHubComment comment) {
+		
+		GitHubCommentDocument gitHubCommentDocument = new GitHubCommentDocument();
+		
+		gitHubCommentDocument.setBody(comment.getText());
+		gitHubCommentDocument.setComment_id(comment.getCommentId());
+		gitHubCommentDocument.setCreator(comment.getCreator());
+		gitHubCommentDocument.setCreated_at(comment.getCreationTime());
+		gitHubCommentDocument.setUpdated_at(comment.getUpdatedAt());
+		gitHubCommentDocument.setUrl(comment.getUrl());
+		
+		//NLP components
+		//gitHubCommentDocument.setContains_code(contains_code);
+		//gitHubCommentDocument.setEmotion(emotion);
+		//gitHubCommentDocument.setPlain_text(plain_text);
+		//gitHubCommentDocument.setRequest(request);
+		//gitHubCommentDocument.setSentiment(sentiment);
+		//gitHubCommentDocument.setSeverity(severity);
+		
+		
+		
+		return gitHubCommentDocument;
 	}
 	
 	/**
@@ -746,24 +788,14 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		BitbucketIssueDocument bitbucketIssueDocument = new BitbucketIssueDocument();
 		//TODO Map once reader is fixed.
 		
+		
+		
+		
+		
 		return bitbucketIssueDocument;
 	}
 	
-	/**
-	 * Maps the necessary information from a 'BitbucketIssueComment' object to a 'BitbucketCommentDocument'
-	 * 
-	 * @param issue
-	 * @param projectName
-	 * @param uid
-	 * @return BitbucketCommentDocument
-	 */
-	private BitbucketCommentDocument bitbucketCommentObjMap(BitbucketIssueComment issue, String projectName, String uid) {
-		
-		BitbucketCommentDocument bitbucketCommentDocument = new BitbucketCommentDocument();
-		// TODO Map once reader is fixed
-		
-		return bitbucketCommentDocument;
-	}
+	
 	
 	/**
 	 * Maps the necessary information from a 'JiraIssue' object to a 'JiraIssueDocument'
@@ -834,5 +866,12 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		
 		
 		return  jiraCommentDocument;
+	}
+	
+	
+	private void clearDB(IndexTransMetric db) {
+		
+		//TODO DROP DB TABLES!
+		db.sync();
 	}
 }

@@ -12,12 +12,12 @@ public class Document {
 	private String sentiment;
 	private String severity;
 	private String plain_text;
-	
+	private Boolean request;
+	private Boolean contains_code;
 	private Date created_at;
 	private Date updated_at;
 	
-	private Boolean request;
-	private Boolean contains_code;
+	
 	
 	
 	public String getProject() {

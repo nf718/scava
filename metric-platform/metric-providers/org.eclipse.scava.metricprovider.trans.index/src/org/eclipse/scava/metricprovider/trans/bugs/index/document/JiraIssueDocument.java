@@ -13,6 +13,7 @@ public class JiraIssueDocument extends Document {
     private String assignee; // id
     private Integer num_watchers;
     private Set<String> sub_tasks;
+    private Set<String> comments;
     private Set<String> labels;
     private Set<String> affected_versions;
     private Set<String> fix_versions;
@@ -174,6 +175,18 @@ public class JiraIssueDocument extends Document {
 	 */
 	public void setResolutionDate(Date resolutionDate) {
 		this.resolution_date = resolutionDate;
+	}
+	/**
+	 * @return the comments
+	 */
+	public Set<String> getComments() {
+		return comments;
+	}
+	/**
+	 * @param comments the comments to set
+	 */
+	public void setComments(Set<String> comments) {
+		this.comments = comments;
 	}
 
 }

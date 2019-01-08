@@ -31,6 +31,7 @@ public class GitHubIssue extends BugTrackingSystemBug {
 	private String url;
 	private String htmlUrl;
 	private String assignee;
+	private List<GitHubComment> githubComments = new ArrayList<>();
 
 	
 	public GitHubIssue() {
@@ -161,6 +162,22 @@ public class GitHubIssue extends BugTrackingSystemBug {
 	public String getAssignee() {
 		return assignee;
 	}
+
+	/**
+	 * @return the githubComments
+	 */
+	public List<GitHubComment> getGithubComments() {
+		return githubComments;
+	}
+
+	/**
+	 * @param githubComment
+	 */
+	public void addGithubComment(GitHubComment githubComment) {
+		this.githubComments.add(githubComment);
+	}
+
+
 	
 
 }

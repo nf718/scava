@@ -49,19 +49,19 @@ public class Indexer {
 	 * @return List<String>
 	 */
 	private static List<String> getIndices() {
-		List<String> list = new ArrayList<String>();
+		List<String> indicesList = new ArrayList<String>();
 		ImmutableOpenMap<String, IndexMetaData> indices = adminClient.admin().cluster().prepareState().get().getState()
 				.getMetaData().getIndices();
 		for (ObjectObjectCursor<String, IndexMetaData> x : indices) {
 			if (!(x.value == null)) {
 				if (!(x.value.getIndex().getName().startsWith("."))) {
-					if (!(list.contains(x.value.getIndex().getName()))) {
-						list.add(x.value.getIndex().getName());
+					if (!(indicesList.contains(x.value.getIndex().getName()))) {
+						indicesList.add(x.value.getIndex().getName());
 					}
 				}
 			}
 		}
-		return list;
+		return indicesList;
 	} 
 
 	/**
@@ -74,10 +74,10 @@ public class Indexer {
 	 * @throws IOException
 	 */
 	private static void addIndexSetting(String index, String setting) throws IOException {
-		UpdateSettingsRequest request = new UpdateSettingsRequest();
-		request.indices(index);
-		request.settings(setting, XContentType.JSON);
-		UpdateSettingsResponse updateSettingsResponse = highLevelClient.indices().putSettings(request,
+		UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest();
+		updateSettingsRequest.indices(index);
+		updateSettingsRequest.settings(setting, XContentType.JSON);
+		UpdateSettingsResponse updateSettingsResponse = highLevelClient.indices().putSettings(updateSettingsRequest,
 				getWriteHeaders());
 		if (updateSettingsResponse.isAcknowledged() == true) {
 			System.out.println("[ELASTICSEARCH MANAGER] \tSettings have been added to " + index);
@@ -157,21 +157,23 @@ public class Indexer {
 				new BasicHeader("Role", "Read") };
 		return headers;
 	}
-
+	
 	/**
-	 * Not yet Implemented
-	 * 
-	 * @param index
-	 * @param doc
-	 * @param doc_id
-	 * @return
+	 * @param reposiotry - name of the repository. For example github, mantis
+	 * @param documentType - document type. For example article, bug, post.
+	 * @param knowledgeType - type of knowledge. for example nlp
+	 * @return indexName - generated name for the index
 	 */
-	@SuppressWarnings("unused")
-	public static GetRequest prepareGetRequest(String index, String doc, String doc_id) {
+	public static String generateIndexName(String reposiotry, String documentType, String knowledgeType) {
 		
-		GetRequest request = new GetRequest(index, doc, doc_id);
-		return null;
+		reposiotry = reposiotry.replaceAll(" ", "").trim().toLowerCase();
+		documentType = documentType.replaceAll(" ", "").trim().toLowerCase();
+		knowledgeType = knowledgeType.replace(" ", "").trim().toLowerCase();
+		
+		return reposiotry + "." + documentType + "." + knowledgeType;
 	}
+
+
 
 	/**
 	 * Use this method when the dump that you are using already contains unique
@@ -192,7 +194,7 @@ public class Indexer {
 	 * @return IndexResponse
 	 * @throws IOException
 	 */
-	public static void indexDocument(String indexName, String documentType, String uid, Object document)
+	private static void indexDocument(String indexName, String documentType, String uid, Object document)
 			throws IOException {
 
 		String source = objectToJson(document);
@@ -202,36 +204,14 @@ public class Indexer {
 
 	}
 
-	/**
-	 * Method for searching the index
-	 * 
-	 * @param index
-	 *            - index name
-	 * @param type
-	 *            - document type
-	 * @param queryBuilder
-	 *            - a query built using a query builder
-	 * @return response
-	 * @throws IOException
-	 */
-	public static SearchResponse searchIndex(String index, String[] type, QueryBuilder queryBuilder)
-			throws IOException {
 
-		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		searchSourceBuilder.query(queryBuilder);
-		// search request
-		SearchRequest searchRequest = new SearchRequest(index);
-		searchRequest.source(searchSourceBuilder).types(type);
-		SearchResponse searchResponse = highLevelClient.search(searchRequest, getReadHeaders());
-		return searchResponse;
-	}
 
 	/**
 	 * Closes the HighLevel Rest Client's connection to the Elasticsearch index
 	 * 
 	 * @throws IOException
 	 */
-	public static void closeHighLevelClient() throws IOException {
+	private static void closeHighLevelClient() throws IOException {
 
 		highLevelClient.close();
 		System.out.println("[ELASTICSEARCH MANAGER] \tHight Level Client - Closed");
@@ -240,7 +220,7 @@ public class Indexer {
 	/**
 	 * Closes the Admin Client
 	 */
-	public static void closeAdminClient() {
+	private static void closeAdminClient() {
 
 		adminClient.close();
 		System.out.println("[ELASTICSEARCH MANAGER] \tAdmin Client - Closed");
@@ -252,7 +232,7 @@ public class Indexer {
 	 * @throws IOException
 	 */
 
-	public static void closeAllClients() throws IOException {
+	private static void closeAllClients() throws IOException {
 		
 		closeHighLevelClient();
 		closeAdminClient();
@@ -279,10 +259,14 @@ public class Indexer {
 	 * to an index and index or update a document related to bug tracking systems.
 	 * 
 	 * @param indexName
-	 * @param type
+	 * @param mapping
+	 * @param documentType
+	 * @param uid
 	 * @param document
 	 */
-	public static void performIndexing(String indexName, String mapping, String type, String documentType, String uid,
+	
+	
+	public static void performIndexing(String indexName, String mapping, String documentType, String uid,
 			Object document) {
 		
 		System.err.println("[Performing Indexing] -----------------------------------------------------------");
@@ -314,29 +298,76 @@ public class Indexer {
 	// ------------------------------------------------------------------------------------------
 	// ------------------------------------------------------------------------------------------
 
-	public void printHits(SearchResponse sr, QueryBuilder query) {
-
-		for (SearchHit hit : sr.getHits()) {
-			System.out.println("[" + query.getName() + " query] Response = " + hit.getSourceAsString());
-		}
-	}
-
-	/**
-	 * Remove in production used for debugging
-	 * 
-	 * @param sr
-	 * @param query
-	 */
-	public void deleteIndex(String index) {
-
-		DeleteIndexRequest request = new DeleteIndexRequest(index.toLowerCase());
-		try {
-			DeleteIndexResponse deleteIndexResponse = highLevelClient.indices().delete(request, getWriteHeaders());
-			if (deleteIndexResponse.isAcknowledged()) {
-				System.out.println("[ELASTICSEARCH MANAGER] \tIndex: " + index + "has been deleted");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	
+	
+	
+	
+//	/**
+//	 * Method for searching the index
+//	 * 
+//	 * @param index
+//	 *            - index name
+//	 * @param type
+//	 *            - document type
+//	 * @param queryBuilder
+//	 *            - a query built using a query builder
+//	 * @return response
+//	 * @throws IOException
+//	 */
+//	public static SearchResponse searchIndex(String index, String[] type, QueryBuilder queryBuilder)
+//			throws IOException {
+//
+//		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+//		searchSourceBuilder.query(queryBuilder);
+//		// search request
+//		SearchRequest searchRequest = new SearchRequest(index);
+//		searchRequest.source(searchSourceBuilder).types(type);
+//		SearchResponse searchResponse = highLevelClient.search(searchRequest, getReadHeaders());
+//		return searchResponse;
+//	}
+	
+	
+	
+	
+//	/**
+//	 * Not yet Implemented
+//	 * 
+//	 * @param index
+//	 * @param doc
+//	 * @param doc_id
+//	 * @return
+//	 */
+//	@SuppressWarnings("unused")
+//	public static GetRequest prepareGetRequest(String index, String doc, String doc_id) {
+//		
+//		GetRequest request = new GetRequest(index, doc, doc_id);
+//		return null;
+//	}
+	
+	
+//	public void printHits(SearchResponse sr, QueryBuilder query) {
+//
+//		for (SearchHit hit : sr.getHits()) {
+//			System.out.println("[" + query.getName() + " query] Response = " + hit.getSourceAsString());
+//		}
+//	}
+//
+//	/**
+//	 * Remove in production used for debugging
+//	 * 
+//	 * @param sr
+//	 * @param query
+//	 */
+//	public void deleteIndex(String index) {
+//
+//		DeleteIndexRequest request = new DeleteIndexRequest(index.toLowerCase());
+//		try {
+//			DeleteIndexResponse deleteIndexResponse = highLevelClient.indices().delete(request, getWriteHeaders());
+//			if (deleteIndexResponse.isAcknowledged()) {
+//				System.out.println("[ELASTICSEARCH MANAGER] \tIndex: " + index + "has been deleted");
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

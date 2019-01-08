@@ -12,6 +12,9 @@ public class IndexerExample {
  * 
  */
 	
+	
+//TODO show small example
+	
 	public static void main(String[] args) {
 //		ExampleRepoistoryDocument issue = new ExampleRepoistoryDocument();
 //		String x = null;

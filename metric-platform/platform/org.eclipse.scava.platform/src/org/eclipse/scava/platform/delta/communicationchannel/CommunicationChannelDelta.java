@@ -24,7 +24,7 @@ public class CommunicationChannelDelta  implements Serializable {
 	transient protected CommunicationChannel communicationChannel;
 	protected List<CommunicationChannelArticle> articles = new ArrayList<CommunicationChannelArticle>();
 	protected List<CommuincationChannelForumPost> posts = new ArrayList<CommuincationChannelForumPost>();
-	protected List<CommunicationChannelForum> forums = new ArrayList<CommunicationChannelForum>();
+	protected List<CommunicationChannelTopic> topics = new ArrayList<CommunicationChannelTopic>();
 	//	protected String latestArticleId;
 	
 	public CommunicationChannel getCommunicationChannel() {
@@ -45,8 +45,8 @@ public class CommunicationChannelDelta  implements Serializable {
 	}
 	
 	
-	public List<CommunicationChannelForum> getForums() {
-		return forums;
+	public List<CommunicationChannelTopic> getForums() {
+		return topics;
 	}
 	
 	public List<CommuincationChannelForumPost> getPosts() {

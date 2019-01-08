@@ -6,9 +6,8 @@ public class EclipseForumUtils {
 
 	public static Date convertStringToDate(String timestamp) {
 
-		String timestampFix = EclipseForumUtils.fixString(timestamp);
-		Long unixTimestamp = Long.parseLong(timestampFix);
-		Date platformDate = new Date(unixTimestamp * 1000L);
+		Long unixTimestamp = Long.parseLong(timestamp);
+		Date platformDate = new Date(unixTimestamp*1000);
 		
 		return platformDate;
 	}
@@ -21,9 +20,7 @@ public class EclipseForumUtils {
 	 * @return fixedString
 	 */
 	public static String fixString(String string) {
-
-		String fixedString = string.substring(1, string.length() - 1);
-
+		String fixedString = string.replaceAll("\"", "").replace("[", "").replace("]", "");
 		return fixedString;
 	}
 }
