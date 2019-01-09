@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.scava.platform.Date;
+import org.eclipse.scava.platform.delta.NoManagerFoundException;
+import org.eclipse.scava.platform.delta.bugtrackingsystem.IBugTrackingSystemManager;
+import org.eclipse.scava.repository.model.BugTrackingSystem;
 import org.eclipse.scava.repository.model.CommunicationChannel;
 import org.eclipse.scava.repository.model.Project;
 
@@ -23,10 +26,45 @@ public class CommunicationChannelProjectDelta {
 	
 	protected List<CommunicationChannelDelta> communicationChannelDeltas = new ArrayList<CommunicationChannelDelta>();
 	
+	
+	
+	
+	
+	/**
+	 * 	public BugTrackingSystemProjectDelta(DB db, Project project, Date date, 
+			IBugTrackingSystemManager bugTrackingSystemManager) throws Exception {
+		for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
+			try {
+				bugTrackingSystemDeltas.add(bugTrackingSystemManager.getDelta(db, bugTrackingSystem, date));
+			} catch (NoManagerFoundException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+	}
+	 * 
+	 * 
+	 * @param db
+	 * @param project
+	 * @param date
+	 * @param communicationChannelManager
+	 * @throws Exception
+	 */
+	
 	public CommunicationChannelProjectDelta(DB db, Project project, Date date, ICommunicationChannelManager communicationChannelManager) throws Exception {
+		
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
-			CommunicationChannelDelta delta = communicationChannelManager.getDelta(db, communicationChannel, date);
-			if (delta != null) communicationChannelDeltas.add(delta);
+			try {
+				
+				communicationChannelDeltas.add(communicationChannelManager.getDelta(db, communicationChannel, date));
+				
+				
+				
+			} catch (NoManagerFoundException e) {
+				System.err.println(e.getMessage());
+			}
+			
+			
+	
 		}
 	}
 	

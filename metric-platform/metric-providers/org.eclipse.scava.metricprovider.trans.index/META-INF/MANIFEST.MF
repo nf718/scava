@@ -6,18 +6,13 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.scava.metricprovider.trans.bugs.index.Activator
 Require-Bundle: org.eclipse.osgi,
  org.eclipse.scava.index.indexer,
- org.eclipse.scava.elasticsearch.dependencies,
  org.apache.log4j.1.2.17,
  com.googlecode.pongo.runtime,
  org.eclipse.scava.platform,
  org.eclipse.scava.repository.model,
- org.eclipse.scava.metricprovider.trans.plaintextprocessing,
  org.eclipse.scava.platform.bugtrackingsystem.github,
- org.eclipse.scava.metricprovider.trans.severityclassification,
- org.eclipse.scava.repository.model.github,
  org.eclipse.scava.metricprovider.trans.detectingcode,
  org.eclipse.scava.platform.bugtrackingsystem.mantis,
- org.eclipse.scava.repository.model.mantis,
  org.eclipse.scava.platform.bugtrackingsystem.redmine,
  org.eclipse.scava.platform.bugtrackingsystem.bitbucket,
  org.eclipse.scava.platform.bugtrackingsystem.jira

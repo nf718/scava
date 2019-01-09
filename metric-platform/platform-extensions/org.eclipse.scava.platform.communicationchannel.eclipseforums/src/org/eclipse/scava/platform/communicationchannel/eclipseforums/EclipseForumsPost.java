@@ -1,10 +1,10 @@
 package org.eclipse.scava.platform.communicationchannel.eclipseforums;
 
 import org.eclipse.scava.platform.Date;
-import org.eclipse.scava.platform.delta.communicationchannel.CommuincationChannelForumPost;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
 
 
-public class EclipseForumsPost extends CommuincationChannelForumPost {
+public class EclipseForumsPost extends CommunicationChannelForumPost {
 
 	private static final long serialVersionUID = 1L;
 	

@@ -109,5 +109,19 @@ public class CommunicationChannelTopic implements Serializable {
 	}
 	
 	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof CommunicationChannelTopic) {
+
+			if (this.topic_id != ((CommunicationChannelTopic) obj).getTopic_id()) {
+				return false;
+			}
+			return true;
+		}
+		
+		return false;
+	}
+	
 
 }

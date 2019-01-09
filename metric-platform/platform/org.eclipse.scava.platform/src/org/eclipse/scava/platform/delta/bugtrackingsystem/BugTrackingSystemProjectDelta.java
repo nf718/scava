@@ -22,8 +22,7 @@ import com.mongodb.DB;
 
 public class BugTrackingSystemProjectDelta {
 	
-	protected List<BugTrackingSystemDelta> bugTrackingSystemDeltas = 
-			new ArrayList<BugTrackingSystemDelta>();
+	protected List<BugTrackingSystemDelta> bugTrackingSystemDeltas = new ArrayList<BugTrackingSystemDelta>();
 	
 	public BugTrackingSystemProjectDelta(DB db, Project project, Date date, 
 			IBugTrackingSystemManager bugTrackingSystemManager) throws Exception {

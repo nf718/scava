@@ -1,22 +1,14 @@
 package org.eclipse.scava.platform.communicationchannel.eclipseforums;
 
 import org.eclipse.scava.platform.Date;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelTopic;
 
 
-public class EclipseForumsTopic {
+public class EclipseForumsTopic extends CommunicationChannelTopic{
 	
-	
-	
-	/*
-	private String subject;
-	private String text;
-	private String user;
-	private Date date;
-	private String PostId;
-	 * 
-	 * 
-	 */
-	private String topic_id;
+	private static final long serialVersionUID = 1L;
+
+
 	private String topic_subject;
 	private String topic_html_url;
 	private String root_post_id;
@@ -26,12 +18,9 @@ public class EclipseForumsTopic {
 	private String last_post_unix_timestamp;
 	private Date first_post_date;
 	private Date last_post_date;
-	/**
-	 * @return the topic_id
-	 */
-	public String getTopic_id() {
-		return topic_id;
-	}
+	
+	
+
 	/**
 	 * @return the first_post_date
 	 */
@@ -44,12 +33,7 @@ public class EclipseForumsTopic {
 	public Date getLast_post_date() {
 		return last_post_date;
 	}
-	/**
-	 * @param topic_id the topic_id to set
-	 */
-	public void setTopic_id(String topic_id) {
-		this.topic_id = topic_id;
-	}
+
 	/**
 	 * @param first_post_date the first_post_date to set
 	 */
@@ -65,7 +49,7 @@ public class EclipseForumsTopic {
 	/**
 	 * @return the topic_subject
 	 */
-	public String getTopic_subject() {
+	public String getTopicSubject() {
 		return topic_subject;
 	}
 	/**

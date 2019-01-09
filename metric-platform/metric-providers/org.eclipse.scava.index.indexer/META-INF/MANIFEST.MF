@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Indexer2
-Bundle-SymbolicName: org.eclipse.scava.index.indexer
+Bundle-SymbolicName: org.eclipse.scava.index.indexer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.osgi,
  org.eclipse.scava.elasticsearch.dependencies
