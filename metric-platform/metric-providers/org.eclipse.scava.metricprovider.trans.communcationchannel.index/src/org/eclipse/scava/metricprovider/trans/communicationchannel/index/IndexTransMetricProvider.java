@@ -255,7 +255,6 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		return uid;
 	}
 	
-	
 
 	/**
 	 * Loads the mapping for a particular index from the 'mappings'directory
