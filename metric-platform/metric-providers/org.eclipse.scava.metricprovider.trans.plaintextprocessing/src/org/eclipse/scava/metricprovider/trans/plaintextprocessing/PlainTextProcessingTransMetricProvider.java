@@ -39,7 +39,6 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 	protected PlatformBugTrackingSystemManager platformBugTrackingSystemManager;
 	protected PlatformCommunicationChannelManager communicationChannelManager;
 	
-	private Pattern newline = Pattern.compile("\\v+");
 	private Pattern escapedNewline = Pattern.compile("(\\\\n|\\\\r)");
 	private Pattern br = Pattern.compile("<br />");
 	
@@ -178,14 +177,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 	
 	private List<String> processGitHub(String text)
 	{
-		/*We need to duplicate the number of new lines as
-		newlines by default are softlines and disappear
-		in the Markdown parser.
-		*/
-		text=newline.matcher(text).replaceAll("\n\n");
 		text = MarkdownParserGitHub.parse(text);
-		//We need to delete the extra newlines again before parsing the text
-		text=newline.matcher(text).replaceAll("");
 		return processHTML(text);
 	}
 	

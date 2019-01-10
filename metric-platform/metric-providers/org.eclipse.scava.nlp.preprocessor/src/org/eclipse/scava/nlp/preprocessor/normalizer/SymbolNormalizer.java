@@ -19,7 +19,7 @@ class SymbolNormalizer
 	
 	public SymbolNormalizer()
 	{
-		singleQuotes = Pattern.compile("‘|’|′|΄|❜|'");
+		singleQuotes = Pattern.compile("‘|’|′|΄|❜|'|`");
 		doubleQuotes = Pattern.compile("”|“|„|″|‶|\"");
 		newLine = Pattern.compile("\r");
 	}
