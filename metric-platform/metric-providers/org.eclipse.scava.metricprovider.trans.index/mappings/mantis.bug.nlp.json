@@ -1,0 +1,70 @@
+{
+  "properties": {
+    "bug_id": {
+      "type": "keyword"
+    },
+    "created_at": {
+      "type": "date"
+    },
+    "updated_at": {
+      "type": "date"
+    },
+    "summary": {
+      "type": "keyword"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "resolution": {
+      "type": "keyword"
+    },
+    "priority": {
+      "type": "keyword"
+    },
+    "creator": {
+      "type": "keyword"
+    },
+    "body": {
+      "type": "keyword"
+    },
+    "assignee": {
+      "type": "keyword"
+    },
+    "view_state": {
+      "type": "keyword"
+    },
+    "tags": {
+      "type": "keyword"
+    },
+    "platform": {
+      "type": "keyword"
+    },
+    "reproducibility": {
+      "type": "keyword"
+    },
+    "operating_system": {
+      "type": "keyword"
+    },
+    "os_build": {
+      "type": "keyword"
+    },
+    "notes": {
+      "type": "keyword"
+    },
+    "contains_code": {
+      "type": "boolean"
+    },
+    "severity": {
+      "type": "keyword"
+    },
+    "sentiment": {
+      "type": "keyword"
+    },
+    "emotion": {
+      "type": "keyword"
+    },
+    "request": {
+      "type": "boolean"
+    }
+  }
+}

@@ -10,10 +10,20 @@
 package org.eclipse.scava.platform.cache.communicationchannel;
 
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelArticle;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelTopic;
 
 public interface ICommunicationChannelContentsCache {
 	
 	public String getCachedContents(CommunicationChannelArticle article);
 	
 	public void putContents(CommunicationChannelArticle article, String contents);
+
+	public void putContents(CommunicationChannelTopic topic, String contents);
+
+	public void putContents(CommunicationChannelForumPost forum, String contents);
+
+	String getCachedContents(CommunicationChannelTopic topic);
+
+	String getCachedContents(CommunicationChannelForumPost post);
 }

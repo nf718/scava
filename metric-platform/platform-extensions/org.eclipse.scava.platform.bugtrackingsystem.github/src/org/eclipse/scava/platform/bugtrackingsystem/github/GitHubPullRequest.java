@@ -10,7 +10,10 @@
 package org.eclipse.scava.platform.bugtrackingsystem.github;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.scava.platform.bugtrackingsystem.github.utils.GitHubReaderUtils;
 import org.eclipse.scava.workflow.restmule.generated.client.github.model.PullRequest;
@@ -26,21 +29,20 @@ public class GitHubPullRequest implements Serializable {
     private Date mergedAt;
     private Date updatedAt;
     private Date createdAt;
-    
-    private long id;
-    
+ 
     private int additions;
     private int changedFiles;
     private int comments;
     private int commits;
     private int deletions;
     private int number;
-    
+  
     private Integer milestone;
-
+    
     private GitHubPullRequestMarker base;
     private GitHubPullRequestMarker head;
 
+    private String id;
     private String body;
     private String diffUrl;
     private String htmlUrl;
@@ -52,6 +54,8 @@ public class GitHubPullRequest implements Serializable {
     private String assignee;
     private String mergedBy;
     private String user;
+    
+    private List<GitHubComment> pullRequestComments  = new ArrayList<>();
 
 	// ----------------------------------------------------------------------------------
 	// Setters
@@ -129,7 +133,7 @@ public class GitHubPullRequest implements Serializable {
     	
     	try{
     		
-    		this.id = pullRequest.getHead().getRepo().getId().longValue();
+    		this.id = Long.toUnsignedString(pullRequest.getHead().getRepo().getId().longValue());
     	}catch(NullPointerException np){
     		
     		
@@ -261,7 +265,7 @@ public class GitHubPullRequest implements Serializable {
         return createdAt;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -352,5 +356,19 @@ public class GitHubPullRequest implements Serializable {
     public GitHubPullRequestMarker getHead() {
         return head;
     }
+
+	/**
+	 * @return the pullRequestComments
+	 */
+	public List<GitHubComment> getPullRequestComments() {
+		return pullRequestComments;
+	}
+
+	/**
+	 * @param pullRequestComments the pullRequestComments to set
+	 */
+	public void addPullRequestComment(GitHubComment pullRequestComment) {
+		this.pullRequestComments.add(pullRequestComment);
+	}
 
 }

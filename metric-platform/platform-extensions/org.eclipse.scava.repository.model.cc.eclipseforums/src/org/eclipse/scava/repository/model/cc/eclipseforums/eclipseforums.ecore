@@ -6,17 +6,17 @@
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EclipseForum" eSuperTypes="//CommunicationChannel">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="open_id">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="client_id">
       <eAnnotations source="searchable"/>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topic_id">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="client_secret">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forum_id">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forum_name">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>

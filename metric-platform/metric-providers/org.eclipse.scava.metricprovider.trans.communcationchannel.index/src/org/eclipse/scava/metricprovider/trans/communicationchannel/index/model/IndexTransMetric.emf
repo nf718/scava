@@ -1,0 +1,7 @@
+package org.eclipse.scava.metricprovider.trans.communicationchannel.index.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class IndexTransMetric {
+
+}

@@ -161,9 +161,8 @@ public class MantisManager implements IBugTrackingSystemManager<MantisBugTrackin
 		// Name of the project that you are focusing on
 		
 		mantis.setProject_id("1");
-
 		// This token is generated in by the user in Mantis
-		mantis.setToken("mGzHRDpCrXIWtjuRZPrLJIAxa1QtpnKS"); // EHU PC
+		mantis.setToken("6Ji3tcrZfNQ3gna7CiE8JSLSiO6FiOIi"); // EHU PC
 		//mantis.setToken("pGN4iQMz0yBiFqG7ywj94TagTbhtuUqd"); // Laptop
 
 		// Host (url) of the server containing the mantis instance.

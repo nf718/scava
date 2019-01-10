@@ -96,6 +96,6 @@ public class TopicsHistoricMetricProvider extends AbstractHistoricalMetricProvid
 
 	@Override
 	public String getSummaryInformation() {
-		return "This metric computes the labels of topics (thematci clusters) in articles submitted every day.";
+		return "This metric computes the labels of topics (thematic clusters) in articles submitted every day.";
 	}
 }

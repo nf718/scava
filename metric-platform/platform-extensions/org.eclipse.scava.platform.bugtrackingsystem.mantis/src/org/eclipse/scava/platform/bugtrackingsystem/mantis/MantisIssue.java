@@ -16,7 +16,6 @@ public class MantisIssue extends BugTrackingSystemBug {
 
 	String description;
 	Date updated_at;
-	MantisCategory category;
 	String handler;
 	String view_state;
 	String reproducibility;
@@ -51,18 +50,6 @@ public class MantisIssue extends BugTrackingSystemBug {
 	 */
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
-	}
-	/**
-	 * @return the category
-	 */
-	public MantisCategory getCategory() {
-		return category;
-	}
-	/**
-	 * @param category the category to set
-	 */
-	public void setCategory(MantisCategory category) {
-		this.category = category;
 	}
 	/**
 	 * @return the handler

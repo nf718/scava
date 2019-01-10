@@ -23,7 +23,8 @@ public class ClassifierTest {
     	int doc4 = 1004;
     	String sub1 = "the latest of a series of inconclusive Western moves";
     	String sub2 = "re: the latest of a series of inconclusive Western moves";
-    	String text1 = "redirection forgot option mailbox";
+    	String text1 = "I am happy";
+    	//String text1 = "redirection forgot option mailbox";
     	String text2 = "Wot about Fig. 2 and (Fig. 3)? We created a myosinII-responsive FA interactome from proteins " +
         			  "in the expected FA list by color-coding proteins according to MDR magnitude (Supplemental Fig. " +
         			  "S4 and Table 7, http://dir.nhlbi.nih.gov/papers/lctm/focaladhesion/Home/index.html). The " +

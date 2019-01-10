@@ -1,0 +1,78 @@
+{
+	"properties": {
+		"postId": {
+			"type": "keyword"
+		},
+		"project": {
+			"type": "keyword"
+		},
+		"user": {
+			"type": "keyword"
+		},
+		"postDate": {
+			"type": "date"
+		},
+		"postUrl": {
+			"type": "keyword"
+		},
+		"userUrl": {
+			"type": "keyword"
+		},
+		"body" : {
+			"type" : "text"
+			},
+		"topic": {
+			"properties": {
+				"topicId": {
+					"type": "keyword"
+				},
+				"subject": {
+					"type": "text"
+				},
+				"topicUrl": {
+					"type": "keyword"
+				},
+				"rootPost": {
+					"type": "keyword"
+				},
+				"replies": {
+					"type": "integer"
+				},
+				"views": {
+					"type": "integer"
+				},
+				"firstPostDate": {
+					"type": "date"
+				},
+				"lastPostDate": {
+					"type": "date"
+				}
+			}
+		},
+		"forum": {
+			"properties": {
+				"forumId": {
+					"type": "keyword"
+				},
+				"forumName": {
+					"type": "text"
+				},
+				"forumDescription": {
+					"type": "keyword"
+				},
+				"forumUrl": {
+					"type": "keyword"
+				},
+				"topics": {
+					"type": "integer"
+				},
+				"posts": {
+					"type": "integer"
+				},
+				"forumCreationDate": {
+					"type": "date"
+				}
+			}
+		}
+	}
+}

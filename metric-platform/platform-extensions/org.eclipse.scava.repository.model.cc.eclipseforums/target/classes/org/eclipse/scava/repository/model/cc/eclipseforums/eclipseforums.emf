@@ -5,10 +5,11 @@ abstract class CommunicationChannel {
 
 }
 
+
 class EclipseForum extends CommunicationChannel {
 	@searchable
-	attr String open_id;
-  attr String topic_id;
-	attr String subject;
-	attr String description;
+	attr String client_id;
+	attr String client_secret;
+  	attr String forum_id;
+  	attr String forum_name;
 }

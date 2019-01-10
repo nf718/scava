@@ -1,0 +1,43 @@
+{
+  "properties": {
+    "project": {
+      "type": "keyword"
+    },
+    "bug_id": {
+      "type": "keyword"
+    },
+    "comment_id": {
+      "type": "keyword"
+    },
+    "creator": {
+      "type": "keyword"
+    },
+    "created_at": {
+      "type": "date"
+    },
+    "body": {
+      "type": "keyword"
+    },
+    "updated_at": {
+      "type": "date"
+    },
+    "url": {
+      "type": "keyword"
+    },
+    "contains_code": {
+      "type": "boolean"
+    },
+    "severity": {
+      "type": "keyword"
+    },
+    "sentiment": {
+      "type": "keyword"
+    },
+    "emotion": {
+      "type": "keyword"
+    },
+    "request": {
+      "type": "boolean"
+    }
+  }
+}

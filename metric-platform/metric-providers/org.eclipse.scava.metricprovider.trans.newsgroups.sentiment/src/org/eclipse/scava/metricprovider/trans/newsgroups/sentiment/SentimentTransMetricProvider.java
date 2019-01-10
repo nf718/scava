@@ -172,7 +172,7 @@ public class SentimentTransMetricProvider  implements
 
 	@Override
 	public String getSummaryInformation() {
-		return "The metric computes sentiment at the beggining of each thread, at its end, and on average.";
+		return "The metric computes sentiment at the beginning of each thread, at its end, and on average.";
 	}
 
 }

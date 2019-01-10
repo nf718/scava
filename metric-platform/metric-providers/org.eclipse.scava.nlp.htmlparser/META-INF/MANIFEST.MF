@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: org.eclipse.scava.nlp.htmlparser
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.scava.nlp.htmlparser
-Bundle-ClassPath: lib/jsoup-1.11.2.jar,
- .
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.13.0"
+Bundle-ClassPath: lib/jsoup-1.11.2.jar
+Require-Bundle: org.eclipse.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.scava.nlp.htmlparser.Activator

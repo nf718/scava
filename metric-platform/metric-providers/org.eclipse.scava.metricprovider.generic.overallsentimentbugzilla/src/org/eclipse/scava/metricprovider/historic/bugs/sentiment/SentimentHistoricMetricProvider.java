@@ -48,6 +48,7 @@ public class SentimentHistoricMetricProvider extends AbstractHistoricalMetricPro
 	@Override
 	public Pongo measure(Project project) {
 		BugsSentimentHistoricMetric overallSentimentBugs = new BugsSentimentHistoricMetric();
+		
 		if (uses.size()==1) {
 			 BugsBugMetadataTransMetric usedBhm = ((BugMetadataTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 			 float overallSentiment = 0,

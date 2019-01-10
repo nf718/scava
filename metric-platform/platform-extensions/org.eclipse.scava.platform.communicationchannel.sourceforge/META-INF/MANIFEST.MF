@@ -18,4 +18,5 @@ Require-Bundle: org.eclipse.core.runtime,
 Import-Package: com.mongodb
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.eclipse.scava.platform.communicationchannel.sourceforge
+Export-Package: org.eclipse.scava.platform.communicationchannel.sourceforge,
+ org.eclipse.scava.platform.communicationchannel.sourceforge.api

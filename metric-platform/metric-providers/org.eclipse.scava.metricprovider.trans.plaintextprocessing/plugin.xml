@@ -13,5 +13,4 @@
          <class name="org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing"/>
          <class name="org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPostPlainTextProcessing"/>
    </extension>
-
 </plugin>

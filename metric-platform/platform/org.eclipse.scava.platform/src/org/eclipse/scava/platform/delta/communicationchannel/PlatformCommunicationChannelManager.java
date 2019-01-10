@@ -19,6 +19,7 @@ import org.eclipse.scava.platform.cache.communicationchannel.ICommunicationChann
 import org.eclipse.scava.platform.cache.communicationchannel.ICommunicationChannelDeltaCache;
 import org.eclipse.scava.repository.model.CommunicationChannel;
 import org.eclipse.scava.repository.model.ManagerAnalysis;
+import org.eclipse.scava.repository.model.cc.eclipseforums.EclipseForum;
 import org.eclipse.scava.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.mongodb.DB;
@@ -80,6 +81,11 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 		if (communicationChannel instanceof NntpNewsGroup) {
 			NntpNewsGroup nntpNewsGroup = (NntpNewsGroup) communicationChannel;
 			cache = getDeltaCache().getCachedDelta(nntpNewsGroup.getUrl() + "/" + nntpNewsGroup.getNewsGroupName(), date);
+		} else if (communicationChannel instanceof EclipseForum) {
+			
+			EclipseForum eclipseForum = (EclipseForum) communicationChannel;
+			cache = getDeltaCache().getCachedDelta(eclipseForum.getUrl() + "/" + eclipseForum.getForum_name(), date);
+	
 		}
 		else
 			cache = getDeltaCache().getCachedDelta(communicationChannel.getUrl(), date);
@@ -110,6 +116,11 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 					NntpNewsGroup nntpNewsGroup = (NntpNewsGroup) communicationChannel;
 					getDeltaCache().putDelta(nntpNewsGroup.getUrl() + "/" + nntpNewsGroup.getNewsGroupName(), date, delta);
 				}
+				else if (communicationChannel instanceof EclipseForum) {
+				getDeltaCache().putDelta(communicationChannel.getUrl(), date, delta);
+				//return delta;
+			}
+				
 				else
 					getDeltaCache().putDelta(communicationChannel.getUrl(), date, delta);
 			}

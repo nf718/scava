@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Gitlab
+Bundle-SymbolicName: org.eclipse.scava.platform.bugtrackingsystem.gitlab;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.eclipse.scava.platform.bugtrackingsystem.gitlab,
+ org.eclipse.scava.platform.bugtrackingsystem.gitlab.utils
+Require-Bundle: org.eclipse.scava.platform,
+ org.eclipse.scava.repository.model.bts.gitlab,
+ org.eclipse.scava.repository.model,
+ org.mapdb,
+ org.apache.log4j.1.2.17,
+ org.eclipse.osgi

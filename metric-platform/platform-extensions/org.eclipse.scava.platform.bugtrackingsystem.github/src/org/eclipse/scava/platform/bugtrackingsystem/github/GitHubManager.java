@@ -32,6 +32,7 @@ import org.eclipse.scava.repository.model.github.GitHubBugTracker;
 import org.eclipse.scava.workflow.restmule.core.data.IData;
 import org.eclipse.scava.workflow.restmule.core.data.IDataSet;
 import org.eclipse.scava.workflow.restmule.generated.client.github.api.IGitHubApi;
+import org.eclipse.scava.workflow.restmule.generated.client.github.model.Comment;
 import org.eclipse.scava.workflow.restmule.generated.client.github.model.Issues;
 import org.eclipse.scava.workflow.restmule.generated.client.github.model.IssuesComments;
 import org.eclipse.scava.workflow.restmule.generated.client.github.model.PullRequest;
@@ -169,6 +170,18 @@ public class GitHubManager implements IBugTrackingSystemManager<GitHubBugTracker
 				if (DateUtils.isSameDay(createdSimple.toJavaDate(), today)) {
 
 					gitHubIssue = GitHubReaderUtils.convertToGitHubIssue(issue, ghbt, today);
+					
+					for (GitHubComment comment : issueCommentsList) {
+
+						if (gitHubIssue.getBugId().equals(comment.getBugId())) {
+							
+							gitHubIssue.addGithubComment(comment);
+							
+						}
+						
+						
+						
+					}
 
 					System.out.println("\t[Issue Created] \t" + gitHubIssue.getBugId() + "\t"+ gitHubIssue.getCreationTime() + "\t" + issue.getTitle());
 
@@ -219,6 +232,16 @@ public class GitHubManager implements IBugTrackingSystemManager<GitHubBugTracker
 				GitHubPullRequest gitHubPullRequest = new GitHubPullRequest();
 
 				gitHubPullRequest = GitHubReaderUtils.convertToGitHubPullRequest(pullRequest, ghbt, today);
+				
+				
+				for (GitHubComment comment : issueCommentsList) {
+
+					if (gitHubPullRequest.getId().equals(comment.getBugId())) {
+						
+						gitHubPullRequest.addPullRequestComment(comment);
+						
+					}
+				}
 				System.out.println("\t[Pull Request ] " + pullRequest.getCreatedAt() + "\t" + pullRequest.getTitle());
 				delta.getPullRequests().add(gitHubPullRequest);
 			}
@@ -454,7 +477,7 @@ public class GitHubManager implements IBugTrackingSystemManager<GitHubBugTracker
 		// sets GitHubTracker Information
 		GitHubBugTracker ghbt = new GitHubBugTracker();
 		// ghbt.setProject(user, login, "dccw2097", repo, owner );
-		ghbt.setProject(user, login, "dccw2097",  "paho.mqtt.java", "eclipse");
+		ghbt.setProject(user, login, "x",  "paho.mqtt.java", "eclipse");
 
 		// creates new instances of...
 		GitHubBugTrackingSystemDelta delta = new GitHubBugTrackingSystemDelta();

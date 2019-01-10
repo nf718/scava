@@ -41,7 +41,7 @@ class RequestReplyDetectorSingleton
 		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
 		if (path.endsWith("bin/"))
 			path = path.substring(0, path.lastIndexOf("bin/"));
-		File file= new File(path+"model/requestreply_model_small.bin");
+		File file= new File(path+"model/requestreply_model_huge.bin");
 		checkModelFile(file.toPath());
 		return factory.load(file.toString());
 	}

@@ -1,0 +1,91 @@
+{
+  "properties": {
+    "project": {
+      "type": "keyword"
+    },
+    "pull_request_id": {
+      "type": "keyword"
+    },
+      "title": {
+      "type": "text"
+    },
+    "mergable": {
+      "type": "keyword"
+    },
+    "merged": {
+      "type": "keyword"
+    },
+    "closed_at": {
+      "type": "date"
+    },
+    "merged_at": {
+      "type": "date"
+    },
+    "updated_at": {
+      "type": "date"
+    },
+    "additions": {
+      "type": "integer"
+    },
+    "number_of_comments": {
+      "type": "integer"
+    },
+    "number_of_commits": {
+      "type": "integer"
+    },
+    "number_of_deletions": {
+      "type": "integer"
+    },
+    "number": {
+      "type": "integer"
+    },
+    "milestone": {
+      "type": "integer"
+    },
+    "body": {
+      "type": "keyword"
+    },
+    "diff_url": {
+      "type": "keyword"
+    },
+    "html_url": {
+      "type": "keyword"
+    },
+    "issue_url": {
+      "type": "keyword"
+    },
+    "patch_url": {
+      "type": "keyword"
+    },
+    "state": {
+      "type": "keyword"
+    },
+    "summary": {
+      "type": "keyword"
+    },
+    "url": {
+      "type": "keyword"
+    },
+    "merged_by": {
+      "type": "keyword"
+    },
+    "user": {
+      "type": "keyword"
+    },
+    "contains_code": {
+      "type": "boolean"
+    },
+    "severity": {
+      "type": "keyword"
+    },
+    "sentiment": {
+      "type": "keyword"
+    },
+    "emotion": {
+      "type": "keyword"
+    },
+    "request": {
+      "type": "boolean"
+    }
+  }
+}

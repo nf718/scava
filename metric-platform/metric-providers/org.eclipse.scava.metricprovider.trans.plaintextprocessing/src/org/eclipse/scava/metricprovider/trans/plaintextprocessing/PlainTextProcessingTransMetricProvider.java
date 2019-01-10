@@ -101,10 +101,15 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 		System.err.println("Started " + getIdentifier());
 		
 		BugTrackingSystemProjectDelta btspDelta = projectDelta.getBugTrackingSystemDelta();
+		
 		for (BugTrackingSystemDelta bugTrackingSystemDelta : btspDelta.getBugTrackingSystemDeltas()) {
+			
 			BugTrackingSystem bugTracker = bugTrackingSystemDelta.getBugTrackingSystem();
+			
 			for (BugTrackingSystemComment comment: bugTrackingSystemDelta.getComments()) {
+				
 				BugTrackerCommentPlainTextProcessing commentsData = findBugTrackerComment(db, bugTracker, comment);
+				
 				if (commentsData == null) {
 					commentsData = new BugTrackerCommentPlainTextProcessing();
 					commentsData.setBugTrackerId(bugTracker.getOSSMeterId());
