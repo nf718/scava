@@ -399,7 +399,7 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		forumPostDocument.setForumName(eclipsePost.getForum().getName());
 		forumPostDocument.setForumDescription(eclipsePost.getForum().getDescription());
 		forumPostDocument.setForumUrl(eclipsePost.getForum().getUrl());
-		forumPostDocument.setForumCreationDate(eclipsePost.getForum().getCreation_date().toJavaDate());
+		forumPostDocument.setForumCreationDate(eclipsePost.getForum().getCreation_date());
 		forumPostDocument.setTopics(eclipsePost.getForum().getTopic_count());
 		forumPostDocument.setPosts(eclipsePost.getForum().getPost_count());
 		
@@ -410,14 +410,14 @@ public class IndexTransMetricProvider implements ITransientMetricProvider<IndexT
 		forumPostDocument.setRootPost(eclipsePost.getTopic().getRoot_post_id());
 		forumPostDocument.setReplies(eclipsePost.getTopic().getReplies());
 		forumPostDocument.setTopicViews(eclipsePost.getTopic().getViews());
-		forumPostDocument.setFirstPostDate(eclipsePost.getTopic().getFirst_post_date().toJavaDate());
-		forumPostDocument.setLastPostDate(eclipsePost.getTopic().getLast_post_date().toJavaDate());
+		forumPostDocument.setFirstPostDate(eclipsePost.getTopic().getFirst_post_date());
+		forumPostDocument.setLastPostDate(eclipsePost.getTopic().getLast_post_date());
 		
 		//post
 		forumPostDocument.setPostId(eclipsePost.getPostId());
 		forumPostDocument.setBody(eclipsePost.getText());
 		forumPostDocument.setCreator(eclipsePost.getUser());
-		forumPostDocument.setCreated_at(eclipsePost.getDate().toJavaDate());
+		forumPostDocument.setCreated_at(eclipsePost.getDate());
 		forumPostDocument.setPostUrl(eclipsePost.getHtml_url());
 		forumPostDocument.setUserUrl(eclipsePost.getUser_url());
 		

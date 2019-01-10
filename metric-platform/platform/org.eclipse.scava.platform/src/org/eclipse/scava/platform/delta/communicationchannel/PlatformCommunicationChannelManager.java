@@ -117,8 +117,8 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 					getDeltaCache().putDelta(nntpNewsGroup.getUrl() + "/" + nntpNewsGroup.getNewsGroupName(), date, delta);
 				}
 				else if (communicationChannel instanceof EclipseForum) {
-					//getDeltaCache().putDelta(communicationChannel.getUrl(), date, delta);
-				return delta;
+				getDeltaCache().putDelta(communicationChannel.getUrl(), date, delta);
+				//return delta;
 			}
 				
 				else

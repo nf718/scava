@@ -1,6 +1,8 @@
 package org.eclipse.scava.platform.communicationchannel.eclipseforums;
 
-import org.eclipse.scava.platform.Date;
+
+import java.util.Date;
+
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelTopic;
 
 

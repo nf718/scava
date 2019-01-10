@@ -136,7 +136,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 			JsonNode jsonNode = new ObjectMapper().readTree(getForumResponse.body().string());
 			this.forum.setForum_id(EclipseForumUtils.fixString(jsonNode.findValues("id").toString()));
 			this.forum.setCreation_date(EclipseForumUtils
-					.convertStringToDate(EclipseForumUtils.fixString(jsonNode.findValues("created_date").toString())));
+					.convertStringToDate(EclipseForumUtils.fixString(jsonNode.findValues("created_date").toString())).toJavaDate());
 			this.forum.setDescription(EclipseForumUtils.fixString(jsonNode.findValues("description").toString()));
 			this.forum.setForum_id(EclipseForumUtils.fixString(jsonNode.findValues("id").toString()));
 			this.forum.setName(EclipseForumUtils.fixString(jsonNode.findValues("name").toString()));
@@ -209,7 +209,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 			if (!(postsJsonNode == null)) {
 				if (!postsJsonNode.isArray()) {
 					topic.setFirst_post_date(EclipseForumUtils.convertStringToDate(
-							EclipseForumUtils.fixString(postsJsonNode.findValue("created_date").toString())));
+							EclipseForumUtils.fixString(postsJsonNode.findValue("created_date").toString())).toJavaDate());
 					topic.setFirst_post_unix_timestamp(
 							EclipseForumUtils.fixString(postsJsonNode.findValue("created_date").toString()));
 				}
@@ -221,7 +221,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 		List<java.util.Date> dates = new ArrayList<>();
 		for (EclipseForumsTopic topic_information : temporal_topic_data) {
 			if (!(topic_information.getFirst_post_date() == null)) {
-				dates.add(topic_information.getFirst_post_date().toJavaDate());
+				dates.add(topic_information.getFirst_post_date());
 			}
 		}
 
@@ -247,7 +247,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 		for (EclipseForumsTopic topic : temporal_topic_data) {
 
 			
-			if ((topic.getFirst_post_date().compareTo(date)) == 0){ 
+			if ((topic.getFirst_post_date().compareTo(date.toJavaDate())) == 0){ 
 				
 				delta.getTopics().add(topic);// adds topic to delta, by assuming the first post is the creation date
 							
@@ -257,7 +257,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 			if (compareDate(topic.getFirst_post_date(), topic.getLast_post_date(), date) == true) {
 				for (EclipseForumsPost post : getPosts(forum, topic)) {
 					
-						if (post.getDate().compareTo(date) == 0) { // if post date is equal to the 'current processing date' add to delta
+						if (post.getDate().compareTo(date.toJavaDate()) == 0) { // if post date is equal to the 'current processing date' add to delta
 							
 							delta.getPosts().add(post);
 						}
@@ -357,7 +357,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 		eclipseForumsPost.setForumId(forum.getForum_id());// May remove this from suoer
 		eclipseForumsPost.setUser(EclipseForumUtils.fixString(jsonNode.findValue("poster_id").toString()));
 		eclipseForumsPost.setDate(EclipseForumUtils
-				.convertStringToDate(EclipseForumUtils.fixString(jsonNode.findValue("created_date").toString())));
+				.convertStringToDate(EclipseForumUtils.fixString(jsonNode.findValue("created_date").toString())).toJavaDate());
 		eclipseForumsPost.setHtml_url(EclipseForumUtils.fixString(jsonNode.findValue("html_url").toString()));
 		eclipseForumsPost.setSubject(EclipseForumUtils.fixString(jsonNode.findValue("subject").toString()));
 		eclipseForumsPost.setText(EclipseForumUtils.fixString(jsonNode.findValue("body").toString()));
@@ -504,7 +504,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 				topic.setTopic_id(EclipseForumUtils.fixString(node.findValue("id").toString()));
 				if (!(node.findValue("last_post_date").toString().isEmpty())) {
 					topic.setLast_post_date(EclipseForumUtils.convertStringToDate(
-							EclipseForumUtils.fixString(node.findValue("last_post_date").toString())));
+							EclipseForumUtils.fixString(node.findValue("last_post_date").toString())).toJavaDate());
 					topicList.add(topic);
 				}
 			}
@@ -614,7 +614,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 	 */
 			
 			
-	private Boolean compareDate(Date min, Date max, Date date) {
+	private Boolean compareDate(java.util.Date min, java.util.Date max, Date date) {
 		
 		Boolean result = false;
 

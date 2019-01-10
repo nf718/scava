@@ -1,9 +1,13 @@
 package org.eclipse.scava.platform.communicationchannel.eclipseforums;
 
-import org.eclipse.scava.platform.Date;
+import java.io.Serializable;
+import java.util.Date;
 
-public class EclipseForumsForum {
+
+public class EclipseForumsForum implements Serializable{
 		
+	
+	private static final long serialVersionUID = 1L;
 	String description;
 	String forum_id;
 	String name;

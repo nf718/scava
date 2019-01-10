@@ -3,8 +3,8 @@ package org.eclipse.scava.platform.delta.communicationchannel;
 
 
 import java.io.Serializable;
+import java.util.Date;
 
-import org.eclipse.scava.platform.Date;
 import org.eclipse.scava.repository.model.CommunicationChannel;
 
 public class CommunicationChannelForumPost implements Serializable {
