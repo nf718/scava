@@ -18,8 +18,9 @@ import java.util.stream.Stream;
 
 import cc.fasttext.FastText;
 import cc.fasttext.Vector;
-import org.eclipse.scava.nlp.predictionmanager.Prediction;
+
 import org.eclipse.scava.nlp.preprocessor.normalizer.Normalizer;
+import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
 
 public class CodeDetector
 {

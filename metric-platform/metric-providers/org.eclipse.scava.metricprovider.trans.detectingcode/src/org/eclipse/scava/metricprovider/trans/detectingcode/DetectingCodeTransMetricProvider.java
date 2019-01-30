@@ -13,7 +13,7 @@ import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPos
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.PlainTextProcessingTransMetric;
 import org.eclipse.scava.nlp.codedetector.CodeDetector;
-import org.eclipse.scava.nlp.predictionmanager.Prediction;
+import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;

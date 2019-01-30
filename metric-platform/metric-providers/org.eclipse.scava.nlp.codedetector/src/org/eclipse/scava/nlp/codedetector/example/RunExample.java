@@ -15,7 +15,7 @@ import java.util.List;
 //import java.util.Scanner;
 
 import org.eclipse.scava.nlp.codedetector.CodeDetector;
-import org.eclipse.scava.nlp.predictionmanager.Prediction;
+import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
 
 public class RunExample
 {

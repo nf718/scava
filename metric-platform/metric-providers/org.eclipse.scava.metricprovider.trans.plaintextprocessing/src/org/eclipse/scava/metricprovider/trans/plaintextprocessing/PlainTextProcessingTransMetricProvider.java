@@ -10,8 +10,8 @@ import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.BugTrack
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPostPlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.PlainTextProcessingTransMetric;
-import org.eclipse.scava.nlp.htmlparser.HtmlParser;
-import org.eclipse.scava.nlp.preprocessor.markdown.github.MarkdownParserGitHub;
+import org.eclipse.scava.nlp.preprocessor.htmlparser.HtmlParser;
+import org.eclipse.scava.nlp.preprocessor.markdown.MarkdownParser;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;
@@ -20,7 +20,7 @@ import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemComme
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemProjectDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
-import org.eclipse.scava.platform.delta.communicationchannel.CommuincationChannelForumPost;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
@@ -139,7 +139,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 			//Process for forums
 			if(communicationChannel instanceof EclipseForum)
 			{
-				for(CommuincationChannelForumPost post : communicationChannelDelta.getPosts())
+				for(CommunicationChannelForumPost post : communicationChannelDelta.getPosts())
 				{
 					ForumPostPlainTextProcessing forumPostsData = findForumPost(db, post);
 					if(forumPostsData == null)
@@ -182,7 +182,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 	
 	private List<String> processGitHub(String text)
 	{
-		text = MarkdownParserGitHub.parse(text);
+		text = MarkdownParser.parse(text);
 		return processHTML(text);
 	}
 	
@@ -242,7 +242,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 		return newsgroupArticlesData;
 	}
 	
-	private ForumPostPlainTextProcessing findForumPost(PlainTextProcessingTransMetric db, CommuincationChannelForumPost post) {
+	private ForumPostPlainTextProcessing findForumPost(PlainTextProcessingTransMetric db, CommunicationChannelForumPost post) {
 		ForumPostPlainTextProcessing forumPostsData = null;
 		Iterable<ForumPostPlainTextProcessing> forumPostsDataIt = 
 		db.getForumPosts().

@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.scava.repository.model,
  org.eclipse.scava.sentimentclassifier.opennlptartarus.libsvm,
  org.eclipse.scava.repository.model.cc.eclipseforums,
- org.eclipse.scava.metricprovider.trans.detectingcode
+ org.eclipse.scava.metricprovider.trans.detectingcode,
+ org.eclipse.scava.platform.communicationchannel.eclipseforums
 Export-Package: org.eclipse.scava.metricprovider.trans.forums.emotions,
  org.eclipse.scava.metricprovider.trans.forums.emotions.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

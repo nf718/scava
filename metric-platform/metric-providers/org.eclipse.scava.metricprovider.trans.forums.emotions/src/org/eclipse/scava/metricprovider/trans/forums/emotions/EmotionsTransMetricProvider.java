@@ -12,8 +12,10 @@ import org.eclipse.scava.metricprovider.trans.forums.emotions.model.ForumsEmotio
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;
+import org.eclipse.scava.platform.communicationchannel.eclipseforums.EclipseForumsPost;
+import org.eclipse.scava.platform.communicationchannel.eclipseforums.EclipseForumsTopic;
 import org.eclipse.scava.platform.delta.ProjectDelta;
-import org.eclipse.scava.platform.delta.communicationchannel.CommuincationChannelForumPost;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
 import org.eclipse.scava.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
@@ -98,13 +100,13 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<For
 			if(communicationChannel instanceof EclipseForum)
 			{
 				EclipseForum forum = (EclipseForum) communicationChannel;
-				//To change to Forum id in the future
-				communicationChannelName = forum.getTopic_id();
+				communicationChannelName = forum.getForum_id();
+				
 			}
 			else
 				continue;
 			
-			Iterable<ForumEmotionsData> forumDataIt = db.getForums().find(ForumEmotionsData.TOPICID.eq(communicationChannelName));
+			Iterable<ForumEmotionsData> forumDataIt = db.getForums().find(ForumEmotionsData.FORUMID.eq(communicationChannelName));
 			ForumEmotionsData forumEmotionsData = null;
 			
 			for (ForumEmotionsData fed : forumDataIt)
@@ -115,11 +117,12 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<For
 			if(forumEmotionsData == null)
 			{
 				forumEmotionsData = new ForumEmotionsData();
-				forumEmotionsData.setTopicId(communicationChannelName);
+				forumEmotionsData.setForumId(communicationChannelName);
 				forumEmotionsData.setNumberOfPosts(0);
 				forumEmotionsData.setCumulativeNumberOfPosts(0);
 				db.getForums().add(forumEmotionsData);
 			}
+			
 			
 			forumEmotionsData.setNumberOfPosts(communicationChannelSystemDelta.getPosts().size());
 			forumEmotionsData.setCumulativeNumberOfPosts(forumEmotionsData.getCumulativeNumberOfPosts() +
@@ -127,18 +130,19 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<For
 			
 			db.sync();
 			
-			Iterable<EmotionDimension> emotionIt = db.getDimensions().find(EmotionDimension.TOPICID.eq(communicationChannelName));
+			Iterable<EmotionDimension> emotionIt = db.getDimensions().find(EmotionDimension.FORUMID.eq(communicationChannelName));
 			
 			for (EmotionDimension emotion : emotionIt)
 			{
 				emotion.setNumberOfPosts(0);
 			}
 			
-			for (CommuincationChannelForumPost post : communicationChannelSystemDelta.getPosts())
+			for (CommunicationChannelForumPost post : communicationChannelSystemDelta.getPosts())
 			{
 				ClassificationInstance instance = new ClassificationInstance();
 				//Adrián: Modify classification instance composed ID!!!!!
-				instance.setTopicId(post.getForumId());
+				instance.setForumId(post.getForumId());
+				instance.setTopicId(post.getTopicId());
 				instance.setPostId(post.getPostId());
 				instance.setText(getNaturalLanguage(detectingCodeMetric, post));
 				
@@ -150,7 +154,7 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<For
 					if(dimension.length()>0)
 					{
 						emotionIt = db.getDimensions().
-								find(EmotionDimension.TOPICID.eq(communicationChannelName),
+								find(EmotionDimension.FORUMID.eq(communicationChannelName),
 									 EmotionDimension.EMOTIONLABEL.eq(dimension));
 						EmotionDimension emotion = null;
 						
@@ -177,7 +181,7 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<For
 			db.sync();
 			
 			emotionIt = db.getDimensions().
-					find(EmotionDimension.TOPICID.eq(communicationChannelName));
+					find(EmotionDimension.FORUMID.eq(communicationChannelName));
 			
 			for (EmotionDimension emotion : db.getDimensions())
 			{
@@ -201,10 +205,11 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<For
 		
 	}
 	
-	private String getNaturalLanguage(DetectingCodeTransMetric db, CommuincationChannelForumPost post) {
+	private String getNaturalLanguage(DetectingCodeTransMetric db, CommunicationChannelForumPost post) {
 		ForumPostDetectingCode forumPostInDetectionCode = null;
 		Iterable<ForumPostDetectingCode> forumPostIt = db.getForumPosts().
-				find(ForumPostDetectingCode.TOPICID.eq(post.getForumId()),
+				find(ForumPostDetectingCode.FORUMID.eq(post.getForumId()),
+						ForumPostDetectingCode.TOPICID.eq(post.getTopicId()),
 						ForumPostDetectingCode.POSTID.eq(post.getPostId()));
 		for (ForumPostDetectingCode nadc:  forumPostIt) {
 			forumPostInDetectionCode = nadc;

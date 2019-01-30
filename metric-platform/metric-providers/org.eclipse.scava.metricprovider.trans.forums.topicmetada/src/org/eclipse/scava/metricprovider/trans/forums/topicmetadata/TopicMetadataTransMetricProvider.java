@@ -23,7 +23,7 @@ import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;
 import org.eclipse.scava.platform.delta.ProjectDelta;
-import org.eclipse.scava.platform.delta.communicationchannel.CommuincationChannelForumPost;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
 import org.eclipse.scava.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
@@ -48,20 +48,17 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 
 	@Override
 	public String getShortIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+		return "ForumsTopicMetadata";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Forum's topic Metadata in Forums";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Forums's topic Metadata in Forums";
 	}
 
 	@Override
@@ -128,20 +125,18 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 			if(communicationChannel instanceof EclipseForum)
 			{
 				EclipseForum forum = (EclipseForum) communicationChannel;
-				//To change to Forum id in the future
-				communicationChannelName = forum.getTopic_id();
+				communicationChannelName = forum.getForum_id();
 			}
 			else
 				continue;
 			
 			Map<String, List<String>> newTopicPosts = new HashMap<String, List<String>>();
 			
-			for(CommuincationChannelForumPost post : communicationChannelDelta.getPosts())
+			for(CommunicationChannelForumPost post : communicationChannelDelta.getPosts())
 			{
 				List<String> newPosts;
-				//Need to be changed to topicId
-				if (newTopicPosts.containsKey(post.getForumId())) {
-					newPosts = newTopicPosts.get(post.getForumId());
+				if (newTopicPosts.containsKey(post.getTopicId())) {
+					newPosts = newTopicPosts.get(post.getTopicId());
 				} else {
 					newPosts = new ArrayList<String>();
 					newTopicPosts.put(post.getForumId(), newPosts);
@@ -152,10 +147,11 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 			Classifier classifier = new Classifier();
 			Map<String, ClassificationInstance> classificationInstanceIndex = new HashMap<String, ClassificationInstance>();
 			
-			for(CommuincationChannelForumPost post : communicationChannelDelta.getPosts())
+			for(CommunicationChannelForumPost post : communicationChannelDelta.getPosts())
 			{
 				Iterable<PostData> postIt = db.getPosts().
-													find(PostData.TOPICID.eq(post.getForumId()), 
+													find(PostData.FORUMID.eq(post.getForumId()),
+														 PostData.TOPICID.eq(post.getTopicId()),
 														 PostData.POSTID.eq(post.getPostId()));
 				int numberOfStoredPosts = 0;
 				for (Iterator<PostData> it = postIt.iterator(); it.hasNext();)
@@ -163,8 +159,7 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 					it.next();
 					numberOfStoredPosts++;
 				}
-				//To change to getTopicID
-				List<String> commentList = newTopicPosts.get(post.getForumId());
+				List<String> commentList = newTopicPosts.get(post.getTopicId());
 				int positionFromThreadBeginning = commentList.indexOf(post.getPostId());
 				positionFromThreadBeginning += numberOfStoredPosts;	
 				ClassificationInstance instance = prepareClassificationInstance(post, positionFromThreadBeginning, detectingCodeMetric);
@@ -180,6 +175,8 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 			
 			db.sync(); 
 			
+			//TODO Need to implement parts regarding the topics
+			
 			//Still need to be implemeted the topics
 //			for(CommuincationChannelForumTopic topic : communicationChannelDelta.getTopics())
 //			{
@@ -191,11 +188,12 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 		
 	}
 	
-	private String getNaturalLanguage(CommuincationChannelForumPost post, DetectingCodeTransMetric db)
+	private String getNaturalLanguage(CommunicationChannelForumPost post, DetectingCodeTransMetric db)
 	{
 		ForumPostDetectingCode forumPostInDetectionCode = null;
 		Iterable<ForumPostDetectingCode> forumPostIt = db.getForumPosts().
-				find(ForumPostDetectingCode.TOPICID.eq(post.getForumId()),
+				find(ForumPostDetectingCode.FORUMID.eq(post.getForumId()),
+						ForumPostDetectingCode.TOPICID.eq(post.getTopicId()),
 						ForumPostDetectingCode.POSTID.eq(post.getPostId()));
 		for (ForumPostDetectingCode fpdc:  forumPostIt) {
 			forumPostInDetectionCode = fpdc;
@@ -206,7 +204,7 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 			return "";
 	}
 	
-	private ClassificationInstance prepareClassificationInstance(CommuincationChannelForumPost post, int positionFromThreadBeginning, DetectingCodeTransMetric db)
+	private ClassificationInstance prepareClassificationInstance(CommunicationChannelForumPost post, int positionFromThreadBeginning, DetectingCodeTransMetric db)
 	{
 		ClassificationInstance instance = new ClassificationInstance(); 
 		instance.setTopicId(post.getForumId());
@@ -220,10 +218,11 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 	private void storeComments(ForumsTopicMetadataTransMetric db, Classifier classifier, CommunicationChannelDelta communicationChannelDelta, 
 			   Map<String, ClassificationInstance> classificationInstanceIndex, Map<String, String> postReplyRequest)
 	{
-		for (CommuincationChannelForumPost post : communicationChannelDelta.getPosts())
+		for (CommunicationChannelForumPost post : communicationChannelDelta.getPosts())
 		{
 			Iterable<PostData> postIt = 
-				db.getPosts().find(PostData.TOPICID.eq(post.getForumId()), 
+				db.getPosts().find(PostData.FORUMID.eq(post.getForumId()), 
+										PostData.TOPICID.eq(post.getTopicId()),
 										PostData.POSTID.eq(post.getPostId()));
 			PostData postData = null;
 			for (PostData pd:  postIt)
@@ -231,15 +230,14 @@ public class TopicMetadataTransMetricProvider implements ITransientMetricProvide
 			if (postData == null)
 			{
 				postData = new PostData();
-				postData.setTopicId(post.getForumId());
+				postData.setForumId(post.getForumId());
+				postData.setTopicId(post.getTopicId());
 				postData.setPostId(post.getPostId());
 				postData.setCreationDate(post.getDate().toString());
 				postData.setCreator(post.getUser());
-				//CHange forumid for topicID
-				ClassificationInstance classificationInstance = classificationInstanceIndex.get(post.getForumId()+"_"+post.getPostId());
+				ClassificationInstance classificationInstance = classificationInstanceIndex.get(post.getTopicId()+"_"+post.getPostId());
 				postData.setContentClass(classifier.getClassificationResult(classificationInstance));
-				//Add topicId
-				String requestReplyPrediction = postReplyRequest.get(post.getForumId() + post.getPostId());
+				String requestReplyPrediction = postReplyRequest.get(post.getForumId()+ post.getTopicId() + post.getPostId());
 				postData.setRequestReplyPrediction(requestReplyPrediction);
 				db.getPosts().add(postData);
 				db.sync();

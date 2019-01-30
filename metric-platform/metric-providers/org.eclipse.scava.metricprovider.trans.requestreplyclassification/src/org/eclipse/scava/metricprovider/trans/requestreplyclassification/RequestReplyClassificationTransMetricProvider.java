@@ -22,8 +22,8 @@ import org.eclipse.scava.metricprovider.trans.requestreplyclassification.model.B
 import org.eclipse.scava.metricprovider.trans.requestreplyclassification.model.ForumsPosts;
 import org.eclipse.scava.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.eclipse.scava.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
-import org.eclipse.scava.nlp.predictionmanager.Prediction;
 import org.eclipse.scava.nlp.requestreplydetector.RequestReplyDetector;
+import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
 import org.eclipse.scava.platform.Date;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
@@ -33,7 +33,7 @@ import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemComme
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemProjectDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
-import org.eclipse.scava.platform.delta.communicationchannel.CommuincationChannelForumPost;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
@@ -129,7 +129,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 			//Process for forums
 			if(communicationChannel instanceof EclipseForum)
 			{
-				for(CommuincationChannelForumPost post : communicationChannelDelta.getPosts())
+				for(CommunicationChannelForumPost post : communicationChannelDelta.getPosts())
 				{
 					ForumsPosts postsDataInRequestReply = findForumPost(db, post);
 					if(postsDataInRequestReply == null)
@@ -270,7 +270,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 		return newsgroupArticles;
 	}
 	
-	private ForumsPosts findForumPost(RequestReplyClassificationTransMetric db, CommuincationChannelForumPost post) {
+	private ForumsPosts findForumPost(RequestReplyClassificationTransMetric db, CommunicationChannelForumPost post) {
 		ForumsPosts forumPosts = null;
 		Iterable<ForumsPosts> forumPostsIt = 
 				db.getForumPosts().

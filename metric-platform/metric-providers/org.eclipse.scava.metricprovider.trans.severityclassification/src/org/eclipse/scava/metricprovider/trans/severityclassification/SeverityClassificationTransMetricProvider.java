@@ -42,7 +42,7 @@ import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemComme
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemProjectDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
-import org.eclipse.scava.platform.delta.communicationchannel.CommuincationChannelForumPost;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
@@ -187,7 +187,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if(communicationChannel instanceof EclipseForum)
 			{
-				for(CommuincationChannelForumPost post : communicationChannelDelta.getPosts())
+				for(CommunicationChannelForumPost post : communicationChannelDelta.getPosts())
 				{
 					//Find posts previously analyzed, if null, we haven't analyzed that topic/thread
 					ForumPostData forumPostInSeverity = findForumPost(db,post);
@@ -298,7 +298,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if(communicationChannel instanceof EclipseForum)
 			{
-				for(CommuincationChannelForumPost post : communicationChannelDelta.getPosts())
+				for(CommunicationChannelForumPost post : communicationChannelDelta.getPosts())
 				{
 					ForumPostData forumPostData = prepareForumPostData(classifier, post);
 					db.getForumPosts().add(forumPostData);
@@ -349,7 +349,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 										"stored classified newsgroup articles");
  	}
 	
-	private ForumPostData prepareForumPostData(Classifier classifier, CommuincationChannelForumPost post)
+	private ForumPostData prepareForumPostData(Classifier classifier, CommunicationChannelForumPost post)
 	{
 		ClassifierMessage classifierMessage = prepareForumPostClassifierMessage(post);
 		String severity = classifier.getClassificationResult(classifierMessage);
@@ -492,7 +492,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
         return classifierMessage;
 	}
 	
-	private ClassifierMessage prepareForumPostClassifierMessage(CommuincationChannelForumPost post, DetectingCodeTransMetric db) {
+	private ClassifierMessage prepareForumPostClassifierMessage(CommunicationChannelForumPost post, DetectingCodeTransMetric db) {
 		ClassifierMessage classifierMessage = prepareForumPostClassifierMessage(post);
 		classifierMessage.setPostId(post.getPostId());
 		String naturalLanguage = naturalLanguageForumPost(db, post);
@@ -504,7 +504,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 		return classifierMessage;
 	}
 	
-	private ClassifierMessage prepareForumPostClassifierMessage(CommuincationChannelForumPost post) {
+	private ClassifierMessage prepareForumPostClassifierMessage(CommunicationChannelForumPost post) {
 		ClassifierMessage classifierMessage = new ClassifierMessage();
 		classifierMessage.setForumId(post.getForumId());
 		return classifierMessage;
@@ -530,7 +530,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 		return bugTrackerBugsData;
 	}
 	
-	private ForumPostData findForumPost(SeverityClassificationTransMetric db, CommuincationChannelForumPost post) {
+	private ForumPostData findForumPost(SeverityClassificationTransMetric db, CommunicationChannelForumPost post) {
 		ForumPostData forumPostsData = null;
 		//We just look for the forumID (in the future as wel for the TopicID) because, we want to get the n-grams from previous posts
 		Iterable<ForumPostData> forumPostsDataIt = 
@@ -542,7 +542,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 		return forumPostsData;
 	}
 	
-	private String naturalLanguageForumPost(DetectingCodeTransMetric db, CommuincationChannelForumPost post) {
+	private String naturalLanguageForumPost(DetectingCodeTransMetric db, CommunicationChannelForumPost post) {
 		ForumPostDetectingCode forumPostInDetectionCode = null;
 		Iterable<ForumPostDetectingCode> forumPostIt = db.getForumPosts().
 				find(ForumPostDetectingCode.FORUMID.eq(post.getForumId()),

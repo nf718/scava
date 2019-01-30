@@ -355,6 +355,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 		EclipseForumsPost eclipseForumsPost = new EclipseForumsPost();
 		eclipseForumsPost.setPostId(EclipseForumUtils.fixString(jsonNode.findValue("id").toString()));
 		eclipseForumsPost.setForumId(forum.getForum_id());// May remove this from suoer
+		eclipseForumsPost.setTopicId(topic.getTopic_id());
 		eclipseForumsPost.setUser(EclipseForumUtils.fixString(jsonNode.findValue("poster_id").toString()));
 		eclipseForumsPost.setDate(EclipseForumUtils
 				.convertStringToDate(EclipseForumUtils.fixString(jsonNode.findValue("created_date").toString())).toJavaDate());

@@ -1,7 +1,7 @@
 package org.eclipse.scava.nlp.requestreplydetector.example;
 
-import org.eclipse.scava.nlp.predictionmanager.Prediction;
 import org.eclipse.scava.nlp.requestreplydetector.RequestReplyDetector;
+import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
 
 public class RunExample
 {

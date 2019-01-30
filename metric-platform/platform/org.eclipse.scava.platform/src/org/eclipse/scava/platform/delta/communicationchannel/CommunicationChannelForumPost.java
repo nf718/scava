@@ -15,8 +15,9 @@ public class CommunicationChannelForumPost implements Serializable {
 	private String text;
 	private String user;
 	private Date date;
-	private String PostId;
+	private String postId;
 	private String forumId;
+	private String topicId;
 
 	transient private CommunicationChannel communicationChannel;
 
@@ -28,10 +29,10 @@ public class CommunicationChannelForumPost implements Serializable {
 	}
 	
 	public String getPostId() {
-		return PostId;
+		return postId;
 	}
 	public void setPostId(String postId) {
-		PostId = postId;
+		this.postId = postId;
 	}
 
 	public String getForumId() {
@@ -64,12 +65,19 @@ public class CommunicationChannelForumPost implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
+	
+	public String getTopicId() {
+		return topicId;
+	}
+	public void setTopicId(String topicId) {
+		this.topicId = topicId;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof CommunicationChannelForumPost) {
 
-			if (this.PostId != ((CommunicationChannelForumPost) obj).getPostId()) {
+			if (this.postId != ((CommunicationChannelForumPost) obj).getPostId()) {
 				return false;
 			}
 			return true;

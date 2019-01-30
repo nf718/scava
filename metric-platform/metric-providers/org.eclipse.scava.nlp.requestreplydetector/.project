@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.eclipse.scava.nlp.requestreplydetector</name>
+	<name>org.eclipse.scava.nlp.classifiers.requestreplydetector</name>
 	<comment></comment>
 	<projects>
 	</projects>

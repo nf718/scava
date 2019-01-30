@@ -12,8 +12,7 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.scava.repository.model,
  org.eclipse.scava.repository.model.cc.nntp,
  org.eclipse.scava.repository.model.sourceforge,
- org.eclipse.scava.nlp.preprocessor,
- org.eclipse.scava.nlp.htmlparser,
+ org.eclipse.scava.nlp.tools.preprocessor,
  org.eclipse.scava.repository.model.cc.eclipseforums;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.scava.metricprovider.trans.plaintextprocessing

@@ -1,13 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Preprocessor
-Bundle-SymbolicName: org.eclipse.scava.nlp.preprocessor
+Bundle-SymbolicName: org.eclipse.scava.nlp.tools.preprocessor
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: org.eclipse.scava.nlp.preprocessor
-Export-Package: org.eclipse.scava.nlp.preprocessor.markdown.github,
+Export-Package: org.eclipse.scava.nlp.preprocessor.htmlparser,
+ org.eclipse.scava.nlp.preprocessor.markdown,
  org.eclipse.scava.nlp.preprocessor.normalizer
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.13.0",
- org.eclipse.osgi
+ org.eclipse.osgi,
+ org.eclipse.scava.nlp.libraries.fasttext
 Bundle-Activator: org.eclipse.scava.nlp.preprocessor.Activator
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/commonmark/commonmark-0.11.0.jar,
+ lib/commonmark/commonmark-ext-gfm-strikethrough-0.11.0.jar,
+ lib/commonmark/commonmark-ext-gfm-tables-0.11.0.jar,
+ lib/jsoup/jsoup-1.11.2.jar

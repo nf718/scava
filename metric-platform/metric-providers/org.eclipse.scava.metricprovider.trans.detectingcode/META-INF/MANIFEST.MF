@@ -12,8 +12,8 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.scava.repository.model.cc.nntp,
  org.eclipse.scava.repository.model.sourceforge,
  org.eclipse.scava.metricprovider.trans.plaintextprocessing,
- org.eclipse.scava.nlp.codedetector,
- org.eclipse.scava.nlp.predictionmanager,
+ org.eclipse.scava.nlp.classifiers.codedetector,
+ org.eclipse.scava.nlp.tools.other,
  org.eclipse.scava.repository.model.cc.eclipseforums
 Bundle-Activator: org.eclipse.scava.metricprovider.trans.detectingcode.Activator
 Bundle-ActivationPolicy: lazy
