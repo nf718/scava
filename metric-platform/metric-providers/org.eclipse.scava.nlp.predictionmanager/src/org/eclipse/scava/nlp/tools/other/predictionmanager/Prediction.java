@@ -22,15 +22,29 @@ public class Prediction
 {
 	String text=null;
 	String label=null;
-	Float probability=null;
+	Double probability=null;
 	
 	public Prediction() {	}
 
-	public void set(String text, String label, Float probability)
+	public void set(String text, String label, Double probability)
 	{
 		this.text=text;
 		this.label=label;
 		this.probability=probability;
+	}
+	
+	public void set(String text, String label, Float probability)
+	{
+		this.text=text;
+		this.label=label;
+		this.probability=(double) probability;
+	}
+	
+	public void set(String text, String label)
+	{
+		this.text=text;
+		this.label=label;
+		this.probability=null;
 	}
 	
 	public String getText()
@@ -43,7 +57,7 @@ public class Prediction
 		return label;
 	}
 	
-	public Float getProb()
+	public Double getProb()
 	{
 		return probability;
 	}

@@ -14,21 +14,18 @@ import java.util.regex.Pattern;
 
 class CodeDetectorFormater
 {
-	private Pattern comma;
-	private Pattern spacedChars;
-	private Pattern label;
-	private Pattern dot;
-	private Pattern special;
-	private Pattern newline;
-	private Pattern spaces;
-	private Pattern spacesStart;
-	private Pattern spacesEnd;
-	private String[] tokens;
-	private double textLength;
-	private double tokensNumber;
-	private double proportionTokensText;
+	private static Pattern comma;
+	private static Pattern spacedChars;
+	private static Pattern label;
+	private static Pattern dot;
+	private static Pattern special;
+	private static Pattern newline;
+	private static Pattern spaces;
+	private static Pattern spacesStart;
+	private static Pattern spacesEnd;
+	private static String[] tokens;
 	
-	public CodeDetectorFormater()
+	static
 	{
 		special= Pattern.compile("</s>");
 		comma = Pattern.compile(",");
@@ -41,7 +38,7 @@ class CodeDetectorFormater
 		spacesEnd=Pattern.compile(" $");
 	}
 	
-	public String apply (String text)
+	public static String apply (String text)
 	{
 		//Keep this order order
 		text=text.toLowerCase(Locale.ENGLISH);
@@ -54,15 +51,15 @@ class CodeDetectorFormater
 		text=newline.matcher(text).replaceAll(" ");
 		text=spaces.matcher(text).replaceAll(" ");
 		//The next part is to check the length of the tokens
-		textLength=text.length();
+		double textLength=text.length();
 		if(textLength>500)
 		{
 			tokens=text.split("\\h+");
-			tokensNumber= tokens.length;
+			double tokensNumber= tokens.length;
 			//The next formula gives a rough approximation of the length of the tokens
 			//If the proportion is too large (>20) so it might exist a token very large
 			//that the code detector might not be able to analyze
-			proportionTokensText=(textLength-tokensNumber+1.0)/tokensNumber;
+			double proportionTokensText=(textLength-tokensNumber+1.0)/tokensNumber;
 			if(proportionTokensText>20.0)
 			{
 				text="";

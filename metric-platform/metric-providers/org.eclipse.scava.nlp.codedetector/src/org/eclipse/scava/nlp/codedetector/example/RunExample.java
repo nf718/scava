@@ -15,21 +15,22 @@ import java.util.List;
 //import java.util.Scanner;
 
 import org.eclipse.scava.nlp.codedetector.CodeDetector;
-import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
+import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPrediction;
+import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPredictionCollection;
 
 public class RunExample
 {
 	
 	public static void main(String[] args)
 	{
-		Prediction prediction;
-		List<Prediction> listPredition;
+		SingleLabelPrediction prediction;
+		SingleLabelPredictionCollection listPredition;
 		
 		//Analysis done by String
 		String word="Reasons for sticking with Java 5:    * only override annotations and HotSpotDiagnosticMXBean require JDK 6    * Mac OS X still has no Java 6    * Europe and Ganymede Eclipse platform should run on Java 5";
         //word = Normalizer.normalize(word);
         prediction=CodeDetector.predict(word);
-        System.out.println(prediction.getText()+"\t"+prediction.getLabel()+"\t"+prediction.getProb());
+        System.out.println(prediction.getText()+"\t"+prediction.getLabel());
         System.out.println("---------------");
         
         
@@ -44,30 +45,16 @@ public class RunExample
         
         //listWords=Normalizer.normalize(listWords);
         listPredition=CodeDetector.predict(listWords);
-        for(Prediction element : listPredition)
+        for(SingleLabelPrediction element : listPredition.getPredictionCollection())
         {
-        	System.out.println(element.getText()+"\t"+element.getLabel()+"\t"+element.getProb());
+        	System.out.println(element.getText()+"\t"+element.getLabel());
         }
         System.out.println("---------------");
         
         //If you want only a list of the strings classified as specific label
-        List<String> prueba = Prediction.getTextsbyLabel(listPredition, "__label__Code");
+        List<String> prueba = listPredition.getTextsPredictedWithLabel("__label__Code");
         prueba.stream().forEach(System.out::println);
         System.out.println("The program has ended");
 		
-        //Command line
-        
-//		Scanner sc = new Scanner(System.in);
-//		System.out.println("Write a line of text");
-//        while (sc.hasNextLine()) {
-//            String word = sc.nextLine();
-//            word = textNormalizer.normalize(word);
-//            System.out.println(word);
-//            prediction=codeDetector.predict(word);
-//            System.out.println(prediction.getText()+"\t"+prediction.getLabel()+"\t"+prediction.getProb());
-//            //codeDetector.getSentenceVector(word);
-//        }
-//        System.out.println("The program has ended");
-//        sc.close();
 	}
 }

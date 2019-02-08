@@ -8,24 +8,21 @@
  * SPDX-License-Identifier: EPL-2.0
  ******************************************************************************/
 package org.eclipse.scava.nlp.codedetector;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+
+import org.eclipse.scava.nlp.preprocessor.normalizer.Normalizer;
+import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
+import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPrediction;
+import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPredictionCollection;
 
 import cc.fasttext.FastText;
 import cc.fasttext.Vector;
 
-import org.eclipse.scava.nlp.preprocessor.normalizer.Normalizer;
-import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
-
 public class CodeDetector
 {
 	private static FastText codeDetector;
-	private static CodeDetectorFormater formatter;
 	
 	/** The {@code defaultLabel} is the label that it is used when a string, after formatting it for the Code Detector, is empty.
 	 * Thus, the Code Detector will be unable to determine a label. The default value is <i>__label__English</i>, as many of the cases may
@@ -36,15 +33,13 @@ public class CodeDetector
 
 	static
 	{
-		CodeDetectorSingleton singleton=CodeDetectorSingleton.getInstance();
-		formatter = singleton.getFormatter();
-		codeDetector = singleton.getCodeDetector();
+		codeDetector = CodeDetectorSingleton.getInstance().getCodeDetector();
 	}
 	
 	private static String formatter(String input)
 	{
 		input=Normalizer.normalize(input);
-		return formatter.apply(input);
+		return CodeDetectorFormater.apply(input);
 	}
 	
 	public static void printWordVector(String input)
@@ -78,22 +73,9 @@ public class CodeDetector
      * it will return a {@link CodeDetector#defaultLabel}. The {@code Prediction}, beside having the default label,
      * can be recognized as well for having a probability of -1.0.
 	 */
-	public static Prediction predict(String text)
+	public static SingleLabelPrediction predict(String text)
 	{
-		//System.out.println(input);
-		String formattedText=formatter(text);
-		if(formattedText.isEmpty())
-		{
-			Prediction defaultPrediction= new Prediction();
-			defaultPrediction.set(text, defaultLabel, (float) -1.0);
-			return defaultPrediction;
-		}
-		//System.out.println(formattedText);
-		//The new line is added in order to have the same output that the C++ version. In fact the new line character is used to predict unseen words.
-		formattedText += "\n";
-		InputStream formattedTextAsIStream = new ByteArrayInputStream(formattedText.getBytes());
-		Stream<Map<String, Float>> prediction = codeDetector.predict(formattedTextAsIStream, 1);
-		return PredictionConsumeStream(text, prediction);
+		return predict(text, defaultLabel);
 	}
 	
 	
@@ -105,22 +87,11 @@ public class CodeDetector
 	 * @return {@link Prediction}, where it is kept the input text, 
      * its label (<i>__label__Code</i> or <i>__label__English</i>), and label's probabilities (float).
      */
-	public static Prediction predict(String text, String defaultLabel)
+	public static SingleLabelPrediction predict(String text, String defaultLabel)
 	{
-		//System.out.println(input);
-		String formattedText=formatter(text);
-		if(formattedText.isEmpty())
-		{
-			Prediction defaultPrediction= new Prediction();
-			defaultPrediction.set(text, defaultLabel, (float) -1.0);
-			return defaultPrediction;
-		}
-		//System.out.println(formattedText);
-		//The new line is added in order to have the same output that the C++ version. In fact the new line character is used to predict unseen words.
-		formattedText += "\n";
-		InputStream formattedTextAsIStream = new ByteArrayInputStream(formattedText.getBytes());
-		Stream<Map<String, Float>> prediction = codeDetector.predict(formattedTextAsIStream, 1);
-		return PredictionConsumeStream(text, prediction);
+		SingleLabelPrediction prediction = new SingleLabelPrediction(text);
+		prediction.setLabel(predictGeneral(text, defaultLabel));
+		return prediction;
 	}
 	
 	/**
@@ -135,12 +106,9 @@ public class CodeDetector
      * 
      * @see Prediction
 	 */
-	public static List<Prediction> predict(List <String> textList)
+	public static SingleLabelPredictionCollection predict(List <String> textList)
 	{
-		List<Prediction> predictionList = new ArrayList<Prediction>();
-		//It must be forEachOrdered otherwise, the output may not keep the same input order
-		textList.stream().forEachOrdered(text->predictionList.add(predict(text)));
-		return(predictionList);
+		return predict(textList, defaultLabel);
 	}
 	
 	/**
@@ -151,18 +119,42 @@ public class CodeDetector
 	 * @return {@code List<Prediction>}, where it is kept, for each entry of <b>textList</b>, the input text, 
      * its label (<i>__label__Code</i> or <i>__label__English</i>), and label's probabilities (float).
 	 */
-	public static List<Prediction> predict(List <String> textList, String defaultLabel)
+	public static SingleLabelPredictionCollection predict(List <String> textList, String defaultLabel)
 	{
-		List<Prediction> predictionList = new ArrayList<Prediction>();
+		SingleLabelPredictionCollection predictionCollection = new SingleLabelPredictionCollection(textList.size());
+		List<Object> predictedLabels = new ArrayList<Object>(textList.size());
 		//It must be forEachOrdered otherwise, the output may not keep the same input order
-		textList.stream().forEachOrdered(text->predictionList.add(predict(text, defaultLabel)));
-		return(predictionList);
+		textList.stream().forEachOrdered(text->{
+												predictionCollection.addText(text);
+												predictedLabels.add(predictGeneral(text, defaultLabel));
+		});
+		predictionCollection.setPredictions(predictedLabels);
+		return predictionCollection;
 	}
 	
-	private static Prediction PredictionConsumeStream(String originalInput, Stream<Map<String, Float>> output)
+	public static SingleLabelPredictionCollection predict(SingleLabelPredictionCollection textCollection)
 	{
-		Prediction prediction= new Prediction();
-		output.map(map->map.entrySet().stream().findFirst().get()).forEachOrdered(e->prediction.set(originalInput, e.getKey(),e.getValue()));
-		return prediction;
+		return predict(textCollection, defaultLabel);
+	}
+	
+	public static SingleLabelPredictionCollection predict(SingleLabelPredictionCollection predictionCollection, String defaultLabel)
+	{
+		List<Object> predictedLabels = new ArrayList<Object>(predictionCollection.size());
+		for(String text: predictionCollection.getTextCollection())
+		{
+			predictedLabels.add(predictGeneral(text, defaultLabel));
+		}
+		predictionCollection.setPredictions(predictedLabels);
+		return predictionCollection;
+	}
+	
+	private static String predictGeneral(String text, String defaultLabel)
+	{
+		String formattedText=formatter(text);
+		if(formattedText.isEmpty())
+			return defaultLabel;
+		//The new line is added in order to have the same output that the C++ version. In fact the new line character is used to predict unseen words.
+		formattedText += "\n";
+		return (String) codeDetector.predictLine(formattedText, 1).keySet().toArray()[0];
 	}
 }

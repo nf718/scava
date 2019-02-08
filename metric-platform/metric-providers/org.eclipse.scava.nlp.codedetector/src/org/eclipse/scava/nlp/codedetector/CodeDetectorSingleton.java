@@ -21,11 +21,9 @@ class CodeDetectorSingleton
 	private static CodeDetectorSingleton singleton = new CodeDetectorSingleton();
 
 	private static FastText codeDetector;
-	private static CodeDetectorFormater formatter;
 	
 	private CodeDetectorSingleton()
 	{
-		formatter = new CodeDetectorFormater();
 		try
 		{
 			codeDetector = getModelBin();
@@ -57,11 +55,6 @@ class CodeDetectorSingleton
 	public static CodeDetectorSingleton getInstance()
 	{
 		return singleton;
-	}
-	
-	public CodeDetectorFormater getFormatter()
-	{
-		return formatter;
 	}
 	
 	public FastText getCodeDetector()

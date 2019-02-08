@@ -1,6 +1,7 @@
 package org.eclipse.scava.nlp.requestreplydetector;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,25 +18,25 @@ class RequestReplyDetectorSingleton
 	private RequestReplyDetectorSingleton()
 	{
 		formatter = new RequestReplyFormater();
-		try
+		try 
 		{
 			requestReplyDetector=getModelBin();
-		}
-		 catch (IllegalArgumentException | IOException | ModelExceptions e)
+		} catch (IllegalArgumentException | IOException e)
 		{
 			e.printStackTrace();
 		}
+		
 	}
 	
-	private void checkModelFile(Path path) throws ModelExceptions
+	private void checkModelFile(Path path) throws FileNotFoundException
 	{
 		if(!Files.exists(path))
         {
-        	throw new ModelExceptions("The file "+path+" has not been found"); 
+        	throw new FileNotFoundException("The file "+path+" has not been found"); 
         }
 	}
 	
-	private FastText getModelBin() throws IllegalArgumentException, IOException, ModelExceptions
+	private FastText getModelBin() throws IllegalArgumentException, IOException
 	{
 		FastText.Factory factory = FastText.DEFAULT_FACTORY;
 		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();

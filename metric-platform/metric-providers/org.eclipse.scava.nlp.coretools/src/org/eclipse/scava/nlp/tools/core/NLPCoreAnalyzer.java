@@ -23,7 +23,7 @@ public class NLPCoreAnalyzer
 	
 	public List<String> tokens()
 	{
-		List<String> tokens = new ArrayList<String>();
+		List<String> tokens = new ArrayList<String>(decodedText.length);
 		for(int i=1; i<decodedText.length ; i++)
 		{
 			tokens.add(decodedText[i].getWordForm());
@@ -50,7 +50,7 @@ public class NLPCoreAnalyzer
 	
 	public List<String> posAsList()
 	{
-		List<String> posText = new ArrayList<String>();
+		List<String> posText = new ArrayList<String>(decodedText.length);
 		//First element, i.e. 0, is the root
 		for(int i=1; i<decodedText.length ; i++)
 		{
@@ -68,7 +68,7 @@ public class NLPCoreAnalyzer
 		Pattern punctuation=Pattern.compile("(\\$|:|,|\\.|````|''|-LRB-|-RRB-)");
 		Pattern numbers=Pattern.compile("CD");
 		Pattern others=Pattern.compile("(ADD|SYM|XX|LS)");;
-		stats = new HashMap<String, Integer>();
+		stats = new HashMap<String, Integer>(4);
 		String pos;
 		int punctuationCounter=0;
 		int othersCounter=0;
@@ -112,13 +112,18 @@ public class NLPCoreAnalyzer
 	
 	public List<String> lemmatizeAsList()
 	{
-		List<String> tokens = new ArrayList<String>();
+		List<String> tokens = new ArrayList<String>(decodedText.length);
 		for(int i=1; i<decodedText.length ; i++)
 		{
 			tokens.add(decodedText[i].getLemma());
 		}
 		return tokens;
     	
+	}
+	
+	public int numberOfTokens()
+	{
+		return decodedText.length;
 	}
 	
 }

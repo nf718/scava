@@ -31,7 +31,7 @@ public class SenticNet5
 		HashMap<String, Double> values=null;
 		Map.Entry<String, HashMap<String, Double>> token=null;
 		List<String> tokens = coreAnalyzedText.lemmatizeAsList();
-		List<String> ngramsList = new ArrayList<String>();
+		List<String> ngramsList = new ArrayList<String>(coreAnalyzedText.numberOfTokens()); //At least the size will be the number of tokens
 		ngramsList.addAll(tokens);
 		ngramsList.addAll(NgramsGenerator.ngramsGenerator(tokens, 5));
 		ngramsList.addAll(NgramsGenerator.skipBigramsGenerator(tokens, 3));
@@ -65,7 +65,7 @@ public class SenticNet5
 	
 	public static HashMap<String,Double> summaryScores(List<Map.Entry<String, HashMap<String,Double>>> senticnetAnalyzedText)
 	{
-		HashMap<String,Double> globalScore = new HashMap<String,Double>();
+		HashMap<String,Double> globalScore = new HashMap<String,Double>(29);
 		double currentPolarity;
 		
 		double pos=0.0;
