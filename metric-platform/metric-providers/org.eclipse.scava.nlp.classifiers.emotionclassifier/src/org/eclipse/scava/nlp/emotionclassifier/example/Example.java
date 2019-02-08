@@ -17,7 +17,6 @@ public class Example
 		textCollection.add("");
 		textCollection.add("I'll need some help from you, but first I want to give you an initial \"version/template\", I'm on it");
 		textCollection.add("I like the new community manager of this project, continue like that!");
-		textCollection.add("I don't like either this new update, but I'm glad that the developers are listening us and think on fixing the major problems.");
 		
 		try {
 			MultiLabelPredictionCollection output = EmotionClassifier.predict(textCollection);

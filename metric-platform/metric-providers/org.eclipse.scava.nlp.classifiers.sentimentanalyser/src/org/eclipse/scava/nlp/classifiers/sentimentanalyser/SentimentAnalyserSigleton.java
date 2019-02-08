@@ -7,10 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.zip.ZipException;
 
-import javax.inject.Singleton;
-
 import vasttext.Vasttext;
-import vasttext.datasets.file.SingleLabelFileDataSet;
 
 class SentimentAnalyserSigleton
 {
