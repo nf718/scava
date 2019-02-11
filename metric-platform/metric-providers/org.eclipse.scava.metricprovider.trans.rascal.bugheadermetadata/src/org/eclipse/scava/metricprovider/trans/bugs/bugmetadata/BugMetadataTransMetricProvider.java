@@ -43,7 +43,6 @@ import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemComme
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemProjectDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
-import org.eclipse.scava.repository.model.BugTrackingSystem;
 import org.eclipse.scava.repository.model.Project;
 
 import com.mongodb.DB;
@@ -130,8 +129,7 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 			}
 
 			Classifier classifier = new Classifier();
-			Map<String, ClassificationInstance> classificationInstanceIndex = 
-												new HashMap<String, ClassificationInstance>();
+			Map<String, ClassificationInstance> classificationInstanceIndex = new HashMap<String, ClassificationInstance>();
 			
 			for (BugTrackingSystemComment comment: delta.getComments()) {
 				Iterable<CommentData> commentIt = 
@@ -144,7 +142,6 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 				}
 				List<String> commentList = newBugsComments.get(comment.getBugId());
 				int positionFromThreadBeginning = commentList.indexOf(comment.getCommentId());
-//				int	positionFromThreadEnd = commentList.size() - positionFromThreadBeginning;
 				positionFromThreadBeginning += numberOfStoredComments;	
 				ClassificationInstance instance = prepareClassificationInstance(comment, positionFromThreadBeginning, detectingCodeMetric);
 				
@@ -173,7 +170,8 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 	{
 		BugTrackerCommentDetectingCode bugtrackerCommentInDetectionCode = null;
 		Iterable<BugTrackerCommentDetectingCode> bugtrackerCommentIt = db.getBugTrackerComments().
-				find(BugTrackerCommentDetectingCode.BUGID.eq(comment.getBugId()),
+				find(BugTrackerCommentDetectingCode.BUGTRACKERID.eq(comment.getBugTrackingSystem().getId()),
+						BugTrackerCommentDetectingCode.BUGID.eq(comment.getBugId()),
 						BugTrackerCommentDetectingCode.COMMENTID.eq(comment.getCommentId()));
 		for (BugTrackerCommentDetectingCode btcdc:  bugtrackerCommentIt) {
 			bugtrackerCommentInDetectionCode = btcdc;
@@ -227,10 +225,9 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 
 	private void updateSentimentPerThread(SentimentClassificationTransMetric sentimentClassifier, 
 											BugsBugMetadataTransMetric db, BugData bugData) {
-		Iterable<BugTrackerCommentsSentimentClassification> commentIt = 
-				sentimentClassifier.getBugTrackerComments().find(
-										BugTrackerCommentsSentimentClassification.BUGTRACKERID.eq(bugData.getBugTrackerId()), 
-										BugTrackerCommentsSentimentClassification.BUGID.eq(bugData.getBugId()));
+		Iterable<BugTrackerCommentsSentimentClassification> commentIt = sentimentClassifier.getBugTrackerComments().find(
+																			BugTrackerCommentsSentimentClassification.BUGTRACKERID.eq(bugData.getBugTrackerId()), 
+																			BugTrackerCommentsSentimentClassification.BUGID.eq(bugData.getBugId()));
 		int earliestCommentId=0, latestCommentId=0,
 			totalSentiment=0, commentSum = 0;
 		String startSentiment = "Neutral", 
@@ -238,7 +235,7 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 		boolean first = true;
 		for (BugTrackerCommentsSentimentClassification bcd:  commentIt) {
 			int cid = Integer.parseInt(bcd.getCommentId());
-			String sentimentClass = bcd.getClassificationResult();
+			String sentimentClass = bcd.getPolarity();
 			if (first) {
 				earliestCommentId = cid;
 				startSentiment = sentimentClass;
@@ -253,9 +250,9 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 				earliestCommentId = cid;
 				startSentiment = sentimentClass;
 			}
-			if (sentimentClass.equals("Positive")) 
+			if (sentimentClass.equals("__label__positive")) 
 				totalSentiment += 1;
-			else if(sentimentClass.equals("Negative")) 
+			else if(sentimentClass.equals("__label__negative")) 
 				totalSentiment -= 1;
 			commentSum++;
 			first = false;

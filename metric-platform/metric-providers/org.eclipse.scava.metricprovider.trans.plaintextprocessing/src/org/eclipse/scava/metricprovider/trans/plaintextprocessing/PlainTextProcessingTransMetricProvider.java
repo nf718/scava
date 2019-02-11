@@ -10,8 +10,8 @@ import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.BugTrack
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPostPlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.PlainTextProcessingTransMetric;
-import org.eclipse.scava.nlp.preprocessor.htmlparser.HtmlParser;
-import org.eclipse.scava.nlp.preprocessor.markdown.MarkdownParser;
+import org.eclipse.scava.nlp.tools.preprocessor.htmlparser.HtmlParser;
+import org.eclipse.scava.nlp.tools.preprocessor.markdown.MarkdownParser;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;
@@ -20,9 +20,9 @@ import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemComme
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemProjectDelta;
 import org.eclipse.scava.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
-import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelDelta;
+import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelForumPost;
 import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
 import org.eclipse.scava.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
 import org.eclipse.scava.repository.model.BugTrackingSystem;
@@ -108,7 +108,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 			
 			for (BugTrackingSystemComment comment: bugTrackingSystemDelta.getComments()) {
 				
-				BugTrackerCommentPlainTextProcessing commentsData = findBugTrackerComment(db, bugTracker, comment);
+				BugTrackerCommentPlainTextProcessing commentsData = findBugTrackerComment(db, comment);
 				
 				if (commentsData == null) {
 					commentsData = new BugTrackerCommentPlainTextProcessing();
@@ -164,7 +164,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 				}
 				for (CommunicationChannelArticle article: communicationChannelDelta.getArticles()) {
 					NewsgroupArticlePlainTextProcessing newsgroupArticlesData = 
-							findNewsgroupArticle(db, communicationChannelName, article);
+							findNewsgroupArticle(db, article);
 					if (newsgroupArticlesData == null) {
 						newsgroupArticlesData = new NewsgroupArticlePlainTextProcessing();
 						newsgroupArticlesData.setNewsGroupName(communicationChannelName);
@@ -214,12 +214,11 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 		db.sync();
 	}
 
-	private BugTrackerCommentPlainTextProcessing findBugTrackerComment(PlainTextProcessingTransMetric db, 
-								BugTrackingSystem bugTracker, BugTrackingSystemComment comment) {
+	private BugTrackerCommentPlainTextProcessing findBugTrackerComment(PlainTextProcessingTransMetric db, BugTrackingSystemComment comment) {
 		BugTrackerCommentPlainTextProcessing bugTrackerCommentsData = null;
 		Iterable<BugTrackerCommentPlainTextProcessing> bugTrackerCommentsDataIt = 
 				db.getBugTrackerComments().
-						find(BugTrackerCommentPlainTextProcessing.BUGTRACKERID.eq(bugTracker.getOSSMeterId()), 
+						find(BugTrackerCommentPlainTextProcessing.BUGTRACKERID.eq(comment.getBugTrackingSystem().getId()), 
 								BugTrackerCommentPlainTextProcessing.BUGID.eq(comment.getBugId()),
 								BugTrackerCommentPlainTextProcessing.COMMENTID.eq(comment.getCommentId()));
 		for (BugTrackerCommentPlainTextProcessing bcd:  bugTrackerCommentsDataIt) {
@@ -229,12 +228,11 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 	}
 	
 
-	private NewsgroupArticlePlainTextProcessing findNewsgroupArticle(PlainTextProcessingTransMetric db, 
-							String communicationChannelName, CommunicationChannelArticle article) {
+	private NewsgroupArticlePlainTextProcessing findNewsgroupArticle(PlainTextProcessingTransMetric db, CommunicationChannelArticle article) {
 		NewsgroupArticlePlainTextProcessing newsgroupArticlesData = null;
 		Iterable<NewsgroupArticlePlainTextProcessing> newsgroupArticlesDataIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticlePlainTextProcessing.NEWSGROUPNAME.eq(communicationChannelName), 
+						find(NewsgroupArticlePlainTextProcessing.NEWSGROUPNAME.eq(article.getCommunicationChannel().getName()), 
 								NewsgroupArticlePlainTextProcessing.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticlePlainTextProcessing nad:  newsgroupArticlesDataIt) {
 			newsgroupArticlesData = nad;
@@ -246,7 +244,8 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 		ForumPostPlainTextProcessing forumPostsData = null;
 		Iterable<ForumPostPlainTextProcessing> forumPostsDataIt = 
 		db.getForumPosts().
-				find(ForumPostPlainTextProcessing.TOPICID.eq(post.getForumId()), 
+				find(ForumPostPlainTextProcessing.FORUMID.eq(post.getForumId()),
+						ForumPostPlainTextProcessing.TOPICID.eq(post.getTopicId()), 
 						ForumPostPlainTextProcessing.POSTID.eq(post.getPostId()));
 		for (ForumPostPlainTextProcessing fpd:  forumPostsDataIt) {
 			forumPostsData = fpd;

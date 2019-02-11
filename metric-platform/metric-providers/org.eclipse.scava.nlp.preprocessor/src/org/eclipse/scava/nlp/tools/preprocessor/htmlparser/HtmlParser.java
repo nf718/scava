@@ -7,7 +7,7 @@
  * 
  * SPDX-License-Identifier: EPL-2.0
  ******************************************************************************/
-package org.eclipse.scava.nlp.preprocessor.htmlparser;
+package org.eclipse.scava.nlp.tools.preprocessor.htmlparser;
 
 import java.io.IOException;
 import java.nio.file.Files;

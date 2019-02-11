@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.eclipse.scava.nlp.preprocessor.normalizer.Normalizer;
 import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
+import org.eclipse.scava.nlp.tools.preprocessor.normalizer.Normalizer;
 
 import cc.fasttext.FastText;
 

@@ -1,7 +1,9 @@
 package org.eclipse.scava.metricprovider.trans.sentimentclassification.model;
 
-import com.googlecode.pongo.runtime.Pongo;
-import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+import com.mongodb.*;
+import java.util.*;
+import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class BugTrackerCommentsSentimentClassification extends Pongo {
@@ -13,15 +15,13 @@ public class BugTrackerCommentsSentimentClassification extends Pongo {
 		BUGTRACKERID.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsSentimentClassification");
 		BUGID.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsSentimentClassification");
 		COMMENTID.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsSentimentClassification");
-		CLASSIFICATIONRESULT.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsSentimentClassification");
-		EMOTIONALDIMENSIONS.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsSentimentClassification");
+		POLARITY.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsSentimentClassification");
 	}
 	
 	public static StringQueryProducer BUGTRACKERID = new StringQueryProducer("bugTrackerId"); 
 	public static StringQueryProducer BUGID = new StringQueryProducer("bugId"); 
 	public static StringQueryProducer COMMENTID = new StringQueryProducer("commentId"); 
-	public static StringQueryProducer CLASSIFICATIONRESULT = new StringQueryProducer("classificationResult"); 
-	public static StringQueryProducer EMOTIONALDIMENSIONS = new StringQueryProducer("emotionalDimensions"); 
+	public static StringQueryProducer POLARITY = new StringQueryProducer("polarity"); 
 	
 	
 	public String getBugTrackerId() {
@@ -51,21 +51,12 @@ public class BugTrackerCommentsSentimentClassification extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public String getClassificationResult() {
-		return parseString(dbObject.get("classificationResult")+"", "");
+	public String getPolarity() {
+		return parseString(dbObject.get("polarity")+"", "");
 	}
 	
-	public BugTrackerCommentsSentimentClassification setClassificationResult(String classificationResult) {
-		dbObject.put("classificationResult", classificationResult);
-		notifyChanged();
-		return this;
-	}
-	public String getEmotionalDimensions() {
-		return parseString(dbObject.get("emotionalDimensions")+"", "");
-	}
-	
-	public BugTrackerCommentsSentimentClassification setEmotionalDimensions(String emotionalDimensions) {
-		dbObject.put("emotionalDimensions", emotionalDimensions);
+	public BugTrackerCommentsSentimentClassification setPolarity(String polarity) {
+		dbObject.put("polarity", polarity);
 		notifyChanged();
 		return this;
 	}

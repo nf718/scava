@@ -2,6 +2,7 @@ package org.eclipse.scava.nlp.tools.predictions.multilabel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -198,5 +199,16 @@ public class MultiLabelPredictionCollection
 		List<Object> output= new ArrayList<Object>(filteredList.size());
 		filteredList.stream().map(p-> p.getId()).forEachOrdered(p->output.add(p));
 		return output;
+	}
+	
+	public HashMap<Object, List<String>> getIdsWithPredictedLabels()
+	{
+		if(idsSet==false)
+			throw new UnsupportedOperationException("The collection doesn't have IDs.");
+		HashMap<Object, List<String>> idsWithLabels = new HashMap<Object, List<String>>(data.size());
+		data.stream().forEachOrdered(p->{
+			idsWithLabels.put(p.getId(), p.getLabels());
+		});
+		return idsWithLabels;
 	}
 }

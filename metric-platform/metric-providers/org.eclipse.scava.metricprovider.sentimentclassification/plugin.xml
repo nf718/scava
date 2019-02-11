@@ -21,6 +21,6 @@
 		<class name="org.eclipse.scava.metricprovider.trans.sentimentclassification.model.SentimentClassificationTransMetric"/>
 		<class name="org.eclipse.scava.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsSentimentClassification"/>
 		<class name="org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification"/>
-		<class name="org.eclipse.scava.metricprovider.trans.sentimentclassification.model.ForumPostDetectingSentimentClassification"/>
+		<class name="org.eclipse.scava.metricprovider.trans.sentimentclassification.model.ForumPostSentimentClassification"/>
 	</extension>
 </plugin>

@@ -8,7 +8,7 @@
  * 
  * SPDX-License-Identifier: EPL-2.0
  ******************************************************************************/
-//Adrián was here
+//Adriï¿½n was here
 package org.eclipse.scava.metricprovider.trans.newsgroups.threads;
 
 import java.util.ArrayList;
@@ -182,8 +182,8 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 					int positionInThread = 0;
 					for (Article article: list) {
 						positionInThread++;
-						if (instanceIndex.containsKey(article.getArticleNumber())) {
-							ClassificationInstance instance = instanceIndex.get(article.getArticleNumber());
+						if (instanceIndex.containsKey(article.getArticleNumberLong())) {
+							ClassificationInstance instance = instanceIndex.get(article.getArticleNumberLong());
 							instance.setPositionFromThreadBeginning(positionInThread);
 //							instance.setPositionFromThreadEnd(list.size()+1-positionInThread);
 							classifier.add(instance);
@@ -289,12 +289,12 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 		for (String reference: article.getReferences())
 			references += " " + reference;
 		articleData.setReferences(references.trim());
-		if (previousClassAssignments.containsKey(article.getArticleNumber())) {
-			articleData.setContentClass(previousClassAssignments.get(article.getArticleNumber()));
+		if (previousClassAssignments.containsKey(article.getArticleNumberLong())) {
+			articleData.setContentClass(previousClassAssignments.get(article.getArticleNumberLong()));
 		}
 		else {
 			articleData.setContentClass(
-					classifier.getClassificationResult(instanceIndex.get(article.getArticleNumber())));
+					classifier.getClassificationResult(instanceIndex.get(article.getArticleNumberLong())));
 		}
 //		printArticle(article, "|3| ");
 		return articleData;
@@ -346,7 +346,7 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 		List<List<Article>> threadList = new ArrayList<List<Article>>();
 		while (article!=null) {
 			List<Article> articleNumbers = new ArrayList<Article>();
-			if (article.getArticleNumber()>0)
+			if (article.getArticleNumberLong()>0)
 				articleNumbers.add(article);
 			if (article.kid != null)
 				articleNumbers.addAll(higherLevelCall(article.kid));
@@ -356,8 +356,8 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 			else {
 				int index=0;
 				while ((index<threadList.size()) && 
-						(articleNumbers.get(0).getArticleNumber() > 
-							threadList.get(index).get(0).getArticleNumber()))
+						(articleNumbers.get(0).getArticleNumberLong() > 
+							threadList.get(index).get(0).getArticleNumberLong()))
 					index++;
 				threadList.add(index, articleNumbers);
 			}
@@ -368,23 +368,10 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 		return threadList;
 	}
 
-//	private static void printThreadList(Article root, List<List<Article>> threadList) {
-//		for (List<Article>list: threadList) {
-//			System.out.print(" [ ");
-//			for (Article art: list)
-//				System.out.print(art.getArticleNumber() + " ");
-//			System.out.print("] ");
-//		}
-//		System.out.println();
-//		System.out.println("-=-=-=-=-=-=-=-");
-//		Article.printThread(root, 0);
-//		System.out.println("-=-=-=-=-=-=-=-");
-//	}
-
 	@SuppressWarnings("deprecation")
 	public static List<Article> higherLevelCall(Article article) {
 		List<Article> articleNumbers = new ArrayList<Article>();
-		if (article.getArticleNumber()>0)
+		if (article.getArticleNumberLong()>0)
 			articleNumbers.add(article);
 		if (article.kid != null)
 			articleNumbers.addAll(higherLevelCall(article.kid));

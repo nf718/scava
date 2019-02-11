@@ -11,19 +11,22 @@
 //Adrián was here
 package org.eclipse.scava.metricprovider.trans.sentimentclassification;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.eclipse.scava.metricprovider.trans.detectingcode.DetectingCodeTransMetricProvider;
 import org.eclipse.scava.metricprovider.trans.detectingcode.model.BugTrackerCommentDetectingCode;
 import org.eclipse.scava.metricprovider.trans.detectingcode.model.DetectingCodeTransMetric;
 import org.eclipse.scava.metricprovider.trans.detectingcode.model.ForumPostDetectingCode;
 import org.eclipse.scava.metricprovider.trans.detectingcode.model.NewsgroupArticleDetectingCode;
 import org.eclipse.scava.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsSentimentClassification;
-import org.eclipse.scava.metricprovider.trans.sentimentclassification.model.ForumPostDetectingSentimentClassification;
+import org.eclipse.scava.metricprovider.trans.sentimentclassification.model.ForumPostSentimentClassification;
 import org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification;
 import org.eclipse.scava.metricprovider.trans.sentimentclassification.model.SentimentClassificationTransMetric;
+import org.eclipse.scava.nlp.classifiers.sentimentanalyser.SentimentAnalyzer;
+import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPredictionCollection;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;
@@ -35,9 +38,6 @@ import org.eclipse.scava.repository.model.Project;
 import org.eclipse.scava.repository.model.cc.eclipseforums.EclipseForum;
 import org.eclipse.scava.repository.model.cc.nntp.NntpNewsGroup;
 import org.eclipse.scava.repository.model.sourceforge.Discussion;
-import org.eclipse.scava.sentimentclassifier.opennlptartarus.libsvm.ClassificationInstance;
-import org.eclipse.scava.sentimentclassifier.opennlptartarus.libsvm.Classifier;
-import org.eclipse.scava.sentimentclassifier.opennlptartarus.libsvm.EmotionalDimensions;
 
 import com.mongodb.DB;
 
@@ -87,16 +87,14 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 	}
 	
 	@Override
-	public void measure(Project project, ProjectDelta projectDelta, 
-							SentimentClassificationTransMetric db) {
-		final long startTime = System.currentTimeMillis();
-		long previousTime = startTime;
+	public void measure(Project project, ProjectDelta projectDelta, SentimentClassificationTransMetric db) {
 		clearDB(db);
 		System.err.println("Started " + getIdentifier());
-		Classifier classifier = new Classifier();
 		
 		DetectingCodeTransMetric detectingCodeMetric = ((DetectingCodeTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 		Iterable<BugTrackerCommentDetectingCode> commentsIt = detectingCodeMetric.getBugTrackerComments();
+		
+		SingleLabelPredictionCollection instancesCollection = new SingleLabelPredictionCollection();
 		
 		for(BugTrackerCommentDetectingCode comment : commentsIt)
 		{
@@ -110,12 +108,9 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 				db.getBugTrackerComments().add(commentInSentiment);
 			}
 			db.sync();
-			ClassificationInstance classificationInstance = prepareBugTrackerCommentInstance(comment);
-			classifier.add(classificationInstance);
+			
+			instancesCollection.addText(getBugTrackerCommentId(comment), comment.getNaturalLanguage());
 		}
-		
-		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
-										"prepared bug comments");
 		
 		Iterable<NewsgroupArticleDetectingCode> articlesIt = detectingCodeMetric.getNewsgroupArticles();
 		
@@ -130,142 +125,74 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 				db.getNewsgroupArticles().add(articleInSentiment);
 			}
 			db.sync();
-			ClassificationInstance classificationInstance = prepareNewsgroupArticleInstance(article);
-			classifier.add(classificationInstance);
+			instancesCollection.addText(getNewsgroupArticleId(article), article.getNaturalLanguage());
 		}
-		
-		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
-				"prepared newsgroup articles");
 		
 		Iterable<ForumPostDetectingCode> postsIt = detectingCodeMetric.getForumPosts();
 		
 		for(ForumPostDetectingCode post : postsIt)
 		{
-			ForumPostDetectingSentimentClassification postInSentiment = findForumPost(db, post);
+			ForumPostSentimentClassification postInSentiment = findForumPost(db, post);
 			if(postInSentiment == null)
 			{
-				postInSentiment = new ForumPostDetectingSentimentClassification();
+				postInSentiment = new ForumPostSentimentClassification();
 				postInSentiment.setForumId(post.getForumId());
+				postInSentiment.setTopicId(post.getTopicId());
 				postInSentiment.setPostId(post.getPostId());
 				db.getForumPosts().add(postInSentiment);
 			}
 			db.sync();
-			ClassificationInstance classificationInstance = prepareForumPostInstance(post);
-			classifier.add(classificationInstance);
+			instancesCollection.addText(getForumPostId(post), post.getNaturalLanguage());
 		}
 		
-		
-		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
-				"prepared forum articles");
-		
-		classifier.classify();
+		if(instancesCollection.size()!=0)
+		{
+			HashMap<Object, String> predictions=null;
+			
+			try {
+				predictions = SentimentAnalyzer.predict(instancesCollection).getIdsWithPredictedLabel();
+			} catch (IOException | InterruptedException e) {
+				e.printStackTrace();
+			}
 
-		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
-										"classifier.classify() finished");
-		
-		for(BugTrackerCommentDetectingCode comment : commentsIt)
-		{
-			BugTrackerCommentsSentimentClassification commentInSentiment = findBugTrackerComment(db, comment);
-			ClassificationInstance classificationInstance = prepareBugTrackerCommentInstance(comment);
-			String classificationResult = classifier.getClassificationResult(classificationInstance);
-			commentInSentiment.setClassificationResult(classificationResult);
-			String emotionalDimensions = EmotionalDimensions.getDimensions(classificationInstance);
-			commentInSentiment.setEmotionalDimensions(emotionalDimensions);
-			db.sync();
+			for(BugTrackerCommentDetectingCode comment : commentsIt)
+			{
+				
+				BugTrackerCommentsSentimentClassification commentInSentiment = findBugTrackerComment(db, comment);
+				commentInSentiment.setPolarity(predictions.get(getBugTrackerCommentId(comment)));
+				db.sync();
+			}
+	
+			for(NewsgroupArticleDetectingCode article : articlesIt)
+			{
+				NewsgroupArticlesSentimentClassification articleInSentiment = findNewsgroupArticle(db, article);
+				articleInSentiment.setPolarity(predictions.get(getNewsgroupArticleId(article)));
+				db.sync();
+			}
+			
+			for(ForumPostDetectingCode post : postsIt)
+			{
+				ForumPostSentimentClassification postInSentiment = findForumPost(db, post);
+				postInSentiment.setPolarity(predictions.get(getForumPostId(post)));
+				db.sync();
+			}
 		}
-
-		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
-										"stored classified bug comments");
-		
-		for(NewsgroupArticleDetectingCode article : articlesIt)
-		{
-			NewsgroupArticlesSentimentClassification articleInSentiment = findNewsgroupArticle(db, article);
-			ClassificationInstance classificationInstance = prepareNewsgroupArticleInstance(article);
-			String classificationResult = classifier.getClassificationResult(classificationInstance);
-			articleInSentiment.setClassificationResult(classificationResult);
-			String emotionalDimensions = EmotionalDimensions.getDimensions(classificationInstance);
-			articleInSentiment.setEmotionalDimensions(emotionalDimensions);
-			db.sync();
-		}
-		
-		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
-				"stored classified newsgroup articles");
-		
-		for(ForumPostDetectingCode post : postsIt)
-		{
-			ForumPostDetectingSentimentClassification postInSentiment = findForumPost(db, post);
-			ClassificationInstance classificationInstance = prepareForumPostInstance(post);
-			String classificationResult = classifier.getClassificationResult(classificationInstance);
-			postInSentiment.setClassificationResult(classificationResult);
-			String emotionalDimensions = EmotionalDimensions.getDimensions(classificationInstance);
-			postInSentiment.setEmotionalDimensions(emotionalDimensions);
-			db.sync();
-		}
-		
-		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
-				"stored classified forum posts");
 
  	}
-	
-	private long printTimeMessage(long startTime, long previousTime, int size, String message) {
-		long currentTime = System.currentTimeMillis();
-		System.err.println(time(currentTime - previousTime) + "\t" +
-						   time(currentTime - startTime) + "\t" +
-						   size + "\t" + message);
-		return currentTime;
-	}
 
-	private String time(long timeInMS) {
-		return DurationFormatUtils.formatDuration(timeInMS, "HH:mm:ss,SSS");
-	}
-	
-	private ClassificationInstance prepareBugTrackerCommentInstance(BugTrackerCommentDetectingCode comment)
+	private String getBugTrackerCommentId(BugTrackerCommentDetectingCode comment)
 	{
-    	ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setBugTrackerId(comment.getBugTrackerId());
-        classificationInstance.setBugId(comment.getBugId());
-        classificationInstance.setCommentId(comment.getCommentId());
-        
-        if (comment.getNaturalLanguage() == null) {
-        	classificationInstance.setText("");
-        } else {
-        	classificationInstance.setText(comment.getNaturalLanguage());
-        }
-        return classificationInstance;
+		return "BUGTRACKER#"+comment.getBugTrackerId() + "#" + comment.getBugId() + "#" + comment.getCommentId();
 	}
 	
-	
-
-	private ClassificationInstance prepareNewsgroupArticleInstance(NewsgroupArticleDetectingCode  article)
+	private String getNewsgroupArticleId(NewsgroupArticleDetectingCode article)
 	{
-    	ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setNewsgroupName(article.getNewsGroupName());
-        classificationInstance.setArticleNumber(article.getArticleNumber());
-        //classificationInstance.setSubject(article.getSubject()); //It is not used anywhere...
-        if(article.getNaturalLanguage() == null)
-        {
-        	classificationInstance.setText("");
-        }
-        else
-        {
-        	classificationInstance.setText(article.getNaturalLanguage());
-        }
-        return classificationInstance;
+		return "NEWSGROUP#"+article.getNewsGroupName() + "#" + article.getArticleNumber();
 	}
 	
-	private ClassificationInstance prepareForumPostInstance(ForumPostDetectingCode post) {
-		ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setForumId(post.getForumId());
-        classificationInstance.setPostId(post.getPostId());
-        if(post.getNaturalLanguage() == null)
-        {
-        	classificationInstance.setText("");
-        }
-        else
-        {
-        	classificationInstance.setText(post.getNaturalLanguage());
-        }
-        return classificationInstance;
+	private String getForumPostId(ForumPostDetectingCode post)
+	{
+		return "FORUM#"+post.getForumId() + "#" + post.getTopicId() + "#" + post.getPostId();
 	}
 	
 	private BugTrackerCommentsSentimentClassification findBugTrackerComment(SentimentClassificationTransMetric db, BugTrackerCommentDetectingCode comment)
@@ -281,6 +208,7 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 		}
 		return bugTrackerCommentsData;
 	}
+	
 
 	private NewsgroupArticlesSentimentClassification findNewsgroupArticle(SentimentClassificationTransMetric db, NewsgroupArticleDetectingCode article)
 	{
@@ -295,19 +223,21 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 		return newsgroupArticlesData;
 	}
 	
-	private ForumPostDetectingSentimentClassification findForumPost(SentimentClassificationTransMetric db,
+	private ForumPostSentimentClassification findForumPost(SentimentClassificationTransMetric db,
 			ForumPostDetectingCode post) {
-		ForumPostDetectingSentimentClassification forumPostData = null;
-		Iterable<ForumPostDetectingSentimentClassification> forumPostsDataIt = 
+		ForumPostSentimentClassification forumPostData = null;
+		Iterable<ForumPostSentimentClassification> forumPostsDataIt = 
 				db.getForumPosts().
-						find(ForumPostDetectingSentimentClassification.FORUMID.eq(post.getForumId()), 
-								ForumPostDetectingSentimentClassification.POSTID.eq(post.getPostId()));
-		for (ForumPostDetectingSentimentClassification nad:  forumPostsDataIt) {
+						find(ForumPostSentimentClassification.FORUMID.eq(post.getForumId()),
+								ForumPostSentimentClassification.TOPICID.eq(post.getTopicId()), 
+								ForumPostSentimentClassification.POSTID.eq(post.getPostId()));
+		for (ForumPostSentimentClassification nad:  forumPostsDataIt) {
 			forumPostData = nad;
 		}
 		return forumPostData;
 	}
 
+	//TODO: Check if this is valid
 	//Do not delete the articles database, it is used in other metrics
 	private void clearDB(SentimentClassificationTransMetric db) {
 		db.getBugTrackerComments().getDbCollection().drop();

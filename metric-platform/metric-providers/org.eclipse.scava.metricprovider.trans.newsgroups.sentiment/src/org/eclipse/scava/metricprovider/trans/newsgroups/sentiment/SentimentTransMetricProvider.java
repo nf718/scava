@@ -107,13 +107,7 @@ public class SentimentTransMetricProvider  implements
 		for (org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification 
 				article: sentimentClassifier.getNewsgroupArticles())
 			articleSentiment.put(article.getNewsGroupName()+article.getArticleNumber(), 
-										article.getClassificationResult());
-
-		Map<String, String> articleEmotionalDimensions = new HashMap<String, String>();
-		for (org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification 
-				article: sentimentClassifier.getNewsgroupArticles())
-			articleEmotionalDimensions.put(article.getNewsGroupName()+article.getArticleNumber(), 
-										article.getEmotionalDimensions());
+										article.getPolarity());
 
 		for (ThreadData thread: usedThreads.getThreads()) {
 
@@ -138,15 +132,10 @@ public class SentimentTransMetricProvider  implements
 					first=false;
 				}
 				threadStats.setEndSentiment(sentiment);
-				if (sentiment.equals("Positive")) 
+				if (sentiment.equals("__label_positive")) 
 					totalSentiment += 1;
-				else if(sentiment.equals("Negative")) 
+				else if(sentiment.equals("__label__negative")) 
 					totalSentiment -= 1;
-//				String emotionalDimensions = articleEmotionalDimensions.get(article.getUrl_name()+article.getArticleNumber());
-
-//				System.err.println("threadId: " + thread.getThreadId() + "\t" +
-//								   "firstMessageTime: " + firstMessageTime + "\t" +
-//								   "firstResponseTime: " + article.getDate());
 			}
 			threadStats.setAverageSentiment(((float)totalSentiment)/sortedArticleSet.size());
 		}

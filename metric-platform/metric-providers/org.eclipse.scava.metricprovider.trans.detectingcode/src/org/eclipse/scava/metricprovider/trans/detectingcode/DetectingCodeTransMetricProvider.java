@@ -13,7 +13,7 @@ import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPos
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.PlainTextProcessingTransMetric;
 import org.eclipse.scava.nlp.codedetector.CodeDetector;
-import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
+import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPredictionCollection;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;
@@ -101,7 +101,6 @@ public class DetectingCodeTransMetricProvider implements ITransientMetricProvide
 		
 		for (BugTrackerCommentPlainTextProcessing comment : commentsIt)
 		{
-			System.out.println(comment.getPlainText());
 			
 			BugTrackerCommentDetectingCode commentDataInDC = findBugTrackerComment(db, comment);
 			
@@ -172,10 +171,10 @@ public class DetectingCodeTransMetricProvider implements ITransientMetricProvide
 	
 	private String[] applyCodeDetector(List<String> plainText)
 	{
-		List<Prediction> predictions = CodeDetector.predict(plainText);
+		SingleLabelPredictionCollection predictions = CodeDetector.predict(plainText);
 		String[] output = new String[2];
-		output[0] = String.join("\n", Prediction.getTextsbyLabel(predictions, "__label__Code"));
-		output[1] = String.join(" ", Prediction.getTextsbyLabel(predictions, "__label__English"));
+		output[0] = String.join("\n", predictions.getTextsPredictedWithLabel( "__label__Code"));
+		output[1] = String.join(" ", predictions.getTextsPredictedWithLabel("__label__English"));
 		return output;
 	}
 	
@@ -185,7 +184,8 @@ public class DetectingCodeTransMetricProvider implements ITransientMetricProvide
 		BugTrackerCommentDetectingCode btcdc = null;
 		Iterable<BugTrackerCommentDetectingCode> btcdcIt = 
 				db.getBugTrackerComments().
-					find(BugTrackerCommentDetectingCode.BUGID.eq(comment.getBugId()),
+					find(BugTrackerCommentDetectingCode.BUGTRACKERID.eq(comment.getBugTrackerId()),
+							BugTrackerCommentDetectingCode.BUGID.eq(comment.getBugId()),
 							BugTrackerCommentDetectingCode.COMMENTID.eq(comment.getCommentId()));
 		for(BugTrackerCommentDetectingCode bcd : btcdcIt)
 		{
@@ -213,7 +213,8 @@ public class DetectingCodeTransMetricProvider implements ITransientMetricProvide
 		ForumPostDetectingCode fpdc = null;
 		Iterable<ForumPostDetectingCode> fpdcIt = 
 				db.getForumPosts().
-					find(ForumPostDetectingCode.TOPICID.eq(post.getTopicId()),
+					find(ForumPostDetectingCode.FORUMID.eq(post.getForumId()),
+							ForumPostDetectingCode.TOPICID.eq(post.getTopicId()),
 							ForumPostDetectingCode.POSTID.eq(post.getPostId()));
 		for(ForumPostDetectingCode fpd : fpdcIt)
 		{
@@ -222,7 +223,8 @@ public class DetectingCodeTransMetricProvider implements ITransientMetricProvide
 		return fpdc;
 	}
 	
-	private void clearDB(DetectingCodeTransMetric db) {
+	private void clearDB(DetectingCodeTransMetric db)
+	{
 		db.getBugTrackerComments().getDbCollection().drop();
 		db.getNewsgroupArticles().getDbCollection().drop();
 		db.getForumPosts().getDbCollection().drop();

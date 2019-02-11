@@ -7,7 +7,7 @@
  * 
  * SPDX-License-Identifier: EPL-2.0
  ******************************************************************************/
-package org.eclipse.scava.nlp.preprocessor.normalizer;
+package org.eclipse.scava.nlp.tools.preprocessor.normalizer;
 
 import java.util.List;
 import java.util.Map;

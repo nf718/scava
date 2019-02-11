@@ -15,7 +15,7 @@ public class SentimentClassificationTransMetric extends PongoDB {
 	
 	protected BugTrackerCommentsSentimentClassificationCollection bugTrackerComments = null;
 	protected NewsgroupArticlesSentimentClassificationCollection newsgroupArticles = null;
-	protected ForumPostDetectingSentimentClassificationCollection forumPosts = null;
+	protected ForumPostSentimentClassificationCollection forumPosts = null;
 	
 	// protected region custom-fields-and-methods on begin
 	// protected region custom-fields-and-methods end
@@ -29,7 +29,7 @@ public class SentimentClassificationTransMetric extends PongoDB {
 		return newsgroupArticles;
 	}
 	
-	public ForumPostDetectingSentimentClassificationCollection getForumPosts() {
+	public ForumPostSentimentClassificationCollection getForumPosts() {
 		return forumPosts;
 	}
 	
@@ -41,7 +41,7 @@ public class SentimentClassificationTransMetric extends PongoDB {
 		pongoCollections.add(bugTrackerComments);
 		newsgroupArticles = new NewsgroupArticlesSentimentClassificationCollection(db.getCollection("SentimentClassificationTransMetric.newsgroupArticles"));
 		pongoCollections.add(newsgroupArticles);
-		forumPosts = new ForumPostDetectingSentimentClassificationCollection(db.getCollection("SentimentClassificationTransMetric.forumPosts"));
+		forumPosts = new ForumPostSentimentClassificationCollection(db.getCollection("SentimentClassificationTransMetric.forumPosts"));
 		pongoCollections.add(forumPosts);
 	}
 }

@@ -1,4 +1,4 @@
-package org.eclipse.scava.nlp.preprocessor.markdown;
+package org.eclipse.scava.nlp.tools.preprocessor.markdown;
 
 import java.util.Arrays;
 import java.util.List;

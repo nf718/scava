@@ -1,4 +1,4 @@
-package org.eclipse.scava.nlp.preprocessor;
+package org.eclipse.scava.nlp.tools.preprocessor;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

@@ -1,8 +1,9 @@
 package org.eclipse.scava.metricprovider.trans.sentimentclassification.model;
 
-import com.googlecode.pongo.runtime.Pongo;
-import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
-import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+import com.mongodb.*;
+import java.util.*;
+import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class NewsgroupArticlesSentimentClassification extends Pongo {
@@ -13,14 +14,12 @@ public class NewsgroupArticlesSentimentClassification extends Pongo {
 		super();
 		NEWSGROUPNAME.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification");
 		ARTICLENUMBER.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification");
-		CLASSIFICATIONRESULT.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification");
-		EMOTIONALDIMENSIONS.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification");
+		POLARITY.setOwningType("org.eclipse.scava.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesSentimentClassification");
 	}
 	
 	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsGroupName"); 
 	public static NumericalQueryProducer ARTICLENUMBER = new NumericalQueryProducer("articleNumber");
-	public static StringQueryProducer CLASSIFICATIONRESULT = new StringQueryProducer("classificationResult"); 
-	public static StringQueryProducer EMOTIONALDIMENSIONS = new StringQueryProducer("emotionalDimensions"); 
+	public static StringQueryProducer POLARITY = new StringQueryProducer("polarity"); 
 	
 	
 	public String getNewsGroupName() {
@@ -41,21 +40,12 @@ public class NewsgroupArticlesSentimentClassification extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public String getClassificationResult() {
-		return parseString(dbObject.get("classificationResult")+"", "");
+	public String getPolarity() {
+		return parseString(dbObject.get("polarity")+"", "");
 	}
 	
-	public NewsgroupArticlesSentimentClassification setClassificationResult(String classificationResult) {
-		dbObject.put("classificationResult", classificationResult);
-		notifyChanged();
-		return this;
-	}
-	public String getEmotionalDimensions() {
-		return parseString(dbObject.get("emotionalDimensions")+"", "");
-	}
-	
-	public NewsgroupArticlesSentimentClassification setEmotionalDimensions(String emotionalDimensions) {
-		dbObject.put("emotionalDimensions", emotionalDimensions);
+	public NewsgroupArticlesSentimentClassification setPolarity(String polarity) {
+		dbObject.put("polarity", polarity);
 		notifyChanged();
 		return this;
 	}
