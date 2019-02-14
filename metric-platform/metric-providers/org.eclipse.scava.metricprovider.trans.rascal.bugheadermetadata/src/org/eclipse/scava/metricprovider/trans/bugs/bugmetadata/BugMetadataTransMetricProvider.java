@@ -170,7 +170,7 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 	{
 		BugTrackerCommentDetectingCode bugtrackerCommentInDetectionCode = null;
 		Iterable<BugTrackerCommentDetectingCode> bugtrackerCommentIt = db.getBugTrackerComments().
-				find(BugTrackerCommentDetectingCode.BUGTRACKERID.eq(comment.getBugTrackingSystem().getId()),
+				find(BugTrackerCommentDetectingCode.BUGTRACKERID.eq(comment.getBugTrackingSystem().getOSSMeterId()),
 						BugTrackerCommentDetectingCode.BUGID.eq(comment.getBugId()),
 						BugTrackerCommentDetectingCode.COMMENTID.eq(comment.getCommentId()));
 		for (BugTrackerCommentDetectingCode btcdc:  bugtrackerCommentIt) {
@@ -230,8 +230,8 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 																			BugTrackerCommentsSentimentClassification.BUGID.eq(bugData.getBugId()));
 		int earliestCommentId=0, latestCommentId=0,
 			totalSentiment=0, commentSum = 0;
-		String startSentiment = "Neutral", 
-			   endSentiment = "Neutral";
+		String startSentiment = "__label__neutral", 
+			   endSentiment = "__label__neutral";
 		boolean first = true;
 		for (BugTrackerCommentsSentimentClassification bcd:  commentIt) {
 			int cid = Integer.parseInt(bcd.getCommentId());

@@ -61,8 +61,11 @@ public class ForumPostDetectingEmotionClassification extends Pongo {
 		return emotions;
 	}
 	
-	public void setEmotions(List<String> emotions) {
+	public ForumPostDetectingEmotionClassification setEmotions(List<String> emotions) {
 		this.emotions=emotions;
+		dbObject.put("emotions", emotions);
+		notifyChanged();
+		return this;
 	}
 	
 }

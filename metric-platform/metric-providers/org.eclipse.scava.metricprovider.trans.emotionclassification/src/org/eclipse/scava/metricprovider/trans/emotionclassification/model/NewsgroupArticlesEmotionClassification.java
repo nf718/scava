@@ -50,8 +50,11 @@ public class NewsgroupArticlesEmotionClassification extends Pongo {
 		return emotions;
 	}
 	
-	public void setEmotions(List<String> emotions) {
+	public NewsgroupArticlesEmotionClassification setEmotions(List<String> emotions) {
 		this.emotions=emotions;
+		dbObject.put("emotions", emotions);
+		notifyChanged();
+		return this;
 	}
 	
 }

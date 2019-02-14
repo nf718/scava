@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
 import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPrediction;
 import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPredictionCollection;
 import org.eclipse.scava.nlp.tools.preprocessor.normalizer.Normalizer;

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Context
+Bundle-SymbolicName: org.nd4j.context
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: nd4j-context-1.0.0-beta2.jar
+Export-Package: org.nd4j.context,
+ org.nd4j.linalg.factory

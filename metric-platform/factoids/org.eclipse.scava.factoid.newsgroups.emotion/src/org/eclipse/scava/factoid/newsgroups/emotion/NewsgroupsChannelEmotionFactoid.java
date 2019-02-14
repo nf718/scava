@@ -76,31 +76,35 @@ public class NewsgroupsChannelEmotionFactoid extends AbstractFactoidMetricProvid
 		
 		float positiveEmotionPercentageSum = 0,
 			  negativeEmotionPercentageSum = 0,
+			  surpriseEmotionPercentageSum = 0, 
 			  mostCommonPositivePercentage = 0,
 			  mostCommonNegativePercentage = 0;
 		String mostCommonPositive = "",
 			   mostCommonNegative = "";
 		for (EmotionDimension dimension: emotionsTransMetric.getDimensions()) {
-			if ( ( dimension.getEmotionLabel().equals("anger") )
-			  || ( dimension.getEmotionLabel().equals("sadness") )
-			  || ( dimension.getEmotionLabel().equals("disgust") )
-			  || ( dimension.getEmotionLabel().equals("fear") ) ) {
+			if ( ( dimension.getEmotionLabel().equals("__label__anger") )
+			  || ( dimension.getEmotionLabel().equals("__label__sadness") )
+			  || ( dimension.getEmotionLabel().equals("__label__fear") ) ) {
 				negativeEmotionPercentageSum += dimension.getCumulativePercentage();
 				if ( mostCommonNegativePercentage < dimension.getCumulativePercentage() ) {
 					mostCommonNegativePercentage = dimension.getCumulativePercentage();
-					mostCommonNegative = dimension.getEmotionLabel();
+					mostCommonNegative = dimension.getEmotionLabel().substring(9); //We remove the __label__
 				}
-			} else {
+			} 
+			else if(dimension.getEmotionLabel().equals("__label__surpise")) {
+				surpriseEmotionPercentageSum += dimension.getCumulativePercentage();
+			}
+			else { //__label__joy and __label__love
 				positiveEmotionPercentageSum += dimension.getCumulativePercentage();
 				if ( mostCommonPositivePercentage < dimension.getCumulativePercentage() ) {
 					mostCommonPositivePercentage = dimension.getCumulativePercentage();
-					mostCommonPositive = dimension.getEmotionLabel();
+					mostCommonPositive = dimension.getEmotionLabel().substring(9);
 				}
 			}
 		}
 		
-		float positiveEmotionPercentage = positiveEmotionPercentageSum / 4,
-			  negativeEmotionPercentage = negativeEmotionPercentageSum / 4;
+		float positiveEmotionPercentage = positiveEmotionPercentageSum / 2,
+			  negativeEmotionPercentage = negativeEmotionPercentageSum / 3;
 		
 		DecimalFormat decimalFormat = new DecimalFormat("#.##");
 		
@@ -118,7 +122,9 @@ public class NewsgroupsChannelEmotionFactoid extends AbstractFactoidMetricProvid
 		stringBuffer.append(" % of newsgroup articles express positive emotions, while ");
 		stringBuffer.append(decimalFormat.format(negativeEmotionPercentage));
 		stringBuffer.append(" % express negative emotions. ");
-		stringBuffer.append("An article can express both positive and negative emotions at the same time.\n");
+		stringBuffer.append(decimalFormat.format(surpriseEmotionPercentageSum));
+		stringBuffer.append(" % of newsgroups articles raised a suprise emotion. ");
+		stringBuffer.append("An article can express positive, negative and surprise emotions at the same time.\n");
 		
 		stringBuffer.append("The most common negative emotion is ");
 		stringBuffer.append(mostCommonNegative);

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mkl
+Bundle-SymbolicName: org.bytedeco.javacpp-presets.mkl
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: mkl-2018.3-1.4.2-linux-x86_64.jar,
+ mkl-2018.3-1.4.2-linux-x86.jar,
+ mkl-2018.3-1.4.2-macosx-x86_64.jar,
+ mkl-2018.3-1.4.2-windows-x86_64.jar,
+ mkl-2018.3-1.4.2-windows-x86.jar,
+ mkl-2018.3-1.4.2.jar
+Export-Package: org.bytedeco.javacpp,
+ org.bytedeco.javacpp.presets

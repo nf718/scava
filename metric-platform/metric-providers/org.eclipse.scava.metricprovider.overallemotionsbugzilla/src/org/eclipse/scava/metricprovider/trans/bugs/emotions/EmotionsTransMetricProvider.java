@@ -169,7 +169,7 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<Bug
 	{
 		BugTrackerCommentsEmotionClassification bugtrackerCommentInEmotionClassification = null;
 		Iterable<BugTrackerCommentsEmotionClassification> bugtrackerCommentIt = db.getBugTrackerComments().
-				find(BugTrackerCommentsEmotionClassification.BUGTRACKERID.eq(comment.getBugTrackingSystem().getId()),
+				find(BugTrackerCommentsEmotionClassification.BUGTRACKERID.eq(comment.getBugTrackingSystem().getOSSMeterId()),
 						BugTrackerCommentsEmotionClassification.BUGID.eq(comment.getBugId()),
 						BugTrackerCommentsEmotionClassification.COMMENTID.eq(comment.getCommentId()));
 		for (BugTrackerCommentsEmotionClassification btcdc:  bugtrackerCommentIt) {

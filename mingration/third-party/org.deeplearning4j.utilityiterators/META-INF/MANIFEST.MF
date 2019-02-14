@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Utilityiterators
+Bundle-SymbolicName: org.deeplearning4j.utilityiterators
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: deeplearning4j-utility-iterators-1.0.0-beta2.jar
+Export-Package: org.deeplearning4j.datasets.iterator,
+ org.deeplearning4j.datasets.iterator.callbacks,
+ org.deeplearning4j.datasets.iterator.file,
+ org.deeplearning4j.datasets.iterator.impl,
+ org.deeplearning4j.datasets.iterator.loader,
+ org.deeplearning4j.datasets.iterator.parallel

@@ -7,9 +7,8 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/commonmark/commonmark-0.11.0.jar"/>
-	<classpathentry kind="lib" path="lib/commonmark/commonmark-ext-gfm-strikethrough-0.11.0.jar"/>
-	<classpathentry kind="lib" path="lib/commonmark/commonmark-ext-gfm-tables-0.11.0.jar"/>
-	<classpathentry kind="lib" path="lib/jsoup/jsoup-1.11.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commonmark-0.12.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commonmark-ext-gfm-strikethrough-0.12.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commonmark-ext-gfm-tables-0.12.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

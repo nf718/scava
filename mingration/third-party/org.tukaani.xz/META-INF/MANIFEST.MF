@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Xz
+Bundle-SymbolicName: org.tukaani.xz
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: xz-1.8.jar,
+ .
+Export-Package: org.tukaani.xz,
+ org.tukaani.xz.check,
+ org.tukaani.xz.common,
+ org.tukaani.xz.delta,
+ org.tukaani.xz.index,
+ org.tukaani.xz.lz,
+ org.tukaani.xz.lzma,
+ org.tukaani.xz.rangecoder,
+ org.tukaani.xz.simple

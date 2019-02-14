@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Log4j12
+Bundle-SymbolicName: org.slf4j.log4j12
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: slf4j-log4j12-1.7.25.jar,
+ .
+Export-Package: org.apache.log4j,
+ org.slf4j.impl

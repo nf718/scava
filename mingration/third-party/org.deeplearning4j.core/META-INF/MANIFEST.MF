@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core
+Bundle-SymbolicName: org.deeplearning4j.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: deeplearning4j-core-1.0.0-beta2.jar
+Export-Package: org.deeplearning4j.api.loader,
+ org.deeplearning4j.api.loader.impl,
+ org.deeplearning4j.api.storage,
+ org.deeplearning4j.api.storage.impl,
+ org.deeplearning4j.api.storage.listener,
+ org.deeplearning4j.datasets.test,
+ org.deeplearning4j.datasets.vectorizer,
+ org.deeplearning4j.evaluation,
+ org.deeplearning4j.parallelism,
+ org.deeplearning4j.ui,
+ org.deeplearning4j.util

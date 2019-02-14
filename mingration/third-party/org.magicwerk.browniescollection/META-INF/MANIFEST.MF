@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Browniescollection
+Bundle-SymbolicName: org.magicwerk.browniescollection
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: brownies-collections-0.9.13.jar
+Export-Package: org.magicwerk.brownies.collections,
+ org.magicwerk.brownies.collections.exceptions,
+ org.magicwerk.brownies.collections.function,
+ org.magicwerk.brownies.collections.helper,
+ org.magicwerk.brownies.collections.helper.primitive,
+ org.magicwerk.brownies.collections.primitive

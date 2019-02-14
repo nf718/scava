@@ -5,11 +5,11 @@ Bundle-SymbolicName: org.eclipse.scava.nlp.classifiers.sentimentanalyser;singlet
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.scava.nlp.classifiers.sentimentanalyser.Activator
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.13.0",
- org.eclipse.scava.nlp.tools.core,
  org.eclipse.scava.nlp.tools.other,
  org.eclipse.scava.nlp.resources.sentinet5,
- VastText,
- org.eclipse.scava.nlp.tools.predictions
+ org.eclipse.scava.nlp.tools.predictions,
+ org.eclipse.scava.nlp.libraries.vasttext;bundle-version="1.0.0",
+ org.eclipse.scava.nlp.tools.core;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.scava.nlp.classifiers.sentimentanalyser

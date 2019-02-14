@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Datasets
+Bundle-SymbolicName: org.deeplearning4j.datasets
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: deeplearning4j-datasets-1.0.0-beta2.jar
+Export-Package: org.deeplearning4j.base,
+ org.deeplearning4j.datasets.fetchers,
+ org.deeplearning4j.datasets.iterator.impl,
+ org.deeplearning4j.datasets.mnist

@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Nativeapi
+Bundle-SymbolicName: org.nd4j.nativeapi
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: nd4j-native-api-1.0.0-beta2.jar
+Export-Package: org.nd4j.autodiff.execution,
+ org.nd4j.compression.impl,
+ org.nd4j.nativeblas,
+ org.nd4j.rng,
+ org.nd4j.rng.deallocator,
+ org.nd4j.storage

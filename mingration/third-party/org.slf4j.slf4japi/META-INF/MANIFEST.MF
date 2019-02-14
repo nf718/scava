@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Slf4japi
+Bundle-SymbolicName: org.slf4j.slf4japi
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: slf4j-api-1.7.25.jar
+Export-Package: org.slf4j,
+ org.slf4j.event,
+ org.slf4j.helpers,
+ org.slf4j.spi

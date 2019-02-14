@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Commonmarkextgfmtables
+Bundle-SymbolicName: com.atlassian.commonmark.extgfmtables
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: commonmark-ext-gfm-tables-0.12.1.jar
+Export-Package: org.commonmark.ext.gfm.tables,
+ org.commonmark.ext.gfm.tables.internal
+Require-Bundle: com.atlassian.commonmark.commonmark;bundle-version="1.0.0"

@@ -23,7 +23,7 @@ import org.eclipse.scava.metricprovider.trans.requestreplyclassification.model.F
 import org.eclipse.scava.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.eclipse.scava.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
 import org.eclipse.scava.nlp.requestreplydetector.RequestReplyDetector;
-import org.eclipse.scava.nlp.tools.other.predictionmanager.Prediction;
+import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPrediction;
 import org.eclipse.scava.platform.Date;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
@@ -234,7 +234,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 	
 	private String applyRequestReplyDetector(String naturalLanguage)
 	{
-		Prediction prediction = RequestReplyDetector.predict(naturalLanguage);
+		SingleLabelPrediction prediction = RequestReplyDetector.predict(naturalLanguage);
 		if(prediction.getLabel().equals("__label__Question"))
 			return "Request";
 		else if(prediction.getLabel().equals("__label__Reply"))

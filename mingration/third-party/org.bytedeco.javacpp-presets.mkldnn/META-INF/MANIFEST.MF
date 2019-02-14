@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mkldnn
+Bundle-SymbolicName: org.bytedeco.javacpp-presets.mkldnn
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: mkl-dnn-0.15-1.4.2-linux-x86_64.jar,
+ mkl-dnn-0.15-1.4.2-macosx-x86_64.jar,
+ mkl-dnn-0.15-1.4.2-windows-x86_64.jar,
+ mkl-dnn-0.15-1.4.2.jar
+Export-Package: org.bytedeco.javacpp,
+ org.bytedeco.javacpp.presets

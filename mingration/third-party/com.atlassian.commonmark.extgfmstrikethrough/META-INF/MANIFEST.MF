@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Commonmarkextgfmstrikethrough
+Bundle-SymbolicName: com.atlassian.commonmark.extgfmstrikethrough
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: commonmark-ext-gfm-strikethrough-0.12.1.jar
+Export-Package: org.commonmark.ext.gfm.strikethrough,
+ org.commonmark.ext.gfm.strikethrough.internal
+Require-Bundle: com.atlassian.commonmark.commonmark;bundle-version="1.0.0"

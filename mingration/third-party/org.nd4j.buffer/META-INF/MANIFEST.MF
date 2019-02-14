@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Buffer
+Bundle-SymbolicName: org.nd4j.buffer
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: nd4j-buffer-1.0.0-beta2.jar
+Export-Package: org.nd4j.linalg.api.buffer,
+ org.nd4j.linalg.api.buffer.allocation,
+ org.nd4j.linalg.api.buffer.factory,
+ org.nd4j.linalg.api.buffer.util,
+ org.nd4j.linalg.api.memory,
+ org.nd4j.linalg.api.memory.conf,
+ org.nd4j.linalg.api.memory.enums,
+ org.nd4j.linalg.api.memory.pointers

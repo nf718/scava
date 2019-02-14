@@ -8,10 +8,8 @@ Export-Package: org.eclipse.scava.nlp.tools.other,
  org.eclipse.scava.nlp.tools.other.emoticons,
  org.eclipse.scava.nlp.tools.other.featuresextractor,
  org.eclipse.scava.nlp.tools.other.ngrams,
- org.eclipse.scava.nlp.tools.other.predictionmanager,
  org.eclipse.scava.nlp.tools.other.symbolconverter
 Automatic-Module-Name: org.eclipse.scava.nlp.predictionmanager
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.13.0",
- org.eclipse.osgi
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.13.0"
 Bundle-Activator: org.eclipse.scava.nlp.tools.other.Activator
 Bundle-ActivationPolicy: lazy

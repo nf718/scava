@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Datanlp
+Bundle-SymbolicName: org.datavec.datanlp
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: datavec-data-nlp-1.0.0-beta2.jar
+Export-Package: org.datavec.nlp.annotator,
+ org.datavec.nlp.input,
+ org.datavec.nlp.metadata,
+ org.datavec.nlp.movingwindow,
+ org.datavec.nlp.reader,
+ org.datavec.nlp.stopwords,
+ org.datavec.nlp.tokenization.tokenizer,
+ org.datavec.nlp.tokenization.tokenizer.preprocessor,
+ org.datavec.nlp.tokenization.tokenizerfactory,
+ org.datavec.nlp.uima,
+ org.datavec.nlp.vectorizer

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dataveciterator
+Bundle-SymbolicName: org.deeplearning4j.dataveciterator
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: deeplearning4j-datavec-iterators-1.0.0-beta2.jar
+Export-Package: org.deeplearning4j.datasets.datavec,
+ org.deeplearning4j.datasets.datavec.exception

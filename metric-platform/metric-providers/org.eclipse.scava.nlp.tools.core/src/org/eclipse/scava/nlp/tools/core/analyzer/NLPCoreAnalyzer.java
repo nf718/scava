@@ -1,4 +1,4 @@
-package org.eclipse.scava.nlp.tools.core;
+package org.eclipse.scava.nlp.tools.core.analyzer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
