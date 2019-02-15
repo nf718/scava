@@ -133,9 +133,7 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<Bug
 			for (EmotionDimension emotion: emotionIt)
 			{
 				if ( bugTrackerData.getNumberOfComments() > 0 )
-				{
 					emotion.setPercentage(((float)100*emotion.getNumberOfComments()) / bugTrackerData.getNumberOfComments());
-				}
 				else
 					emotion.setPercentage( (float) 0 );
 				if ( bugTrackerData.getCumulativeNumberOfComments() > 0 )

@@ -9,8 +9,8 @@ import java.util.zip.ZipException;
 
 import org.datavec.api.conf.Configuration;
 import org.deeplearning4j.datasets.iterator.MultiDataSetWrapperIterator;
+import org.deeplearning4j.eval.ConfusionMatrix;
 import org.deeplearning4j.eval.Evaluation;
-import org.deeplearning4j.eval.EvaluationAveraging;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -205,13 +205,32 @@ public class Vasttext
 				evaluation = vasttextTextAndNumeric.evaluate(test);
 			else //For an extrange reason you can train with a multidataset but not test with it
 				evaluation = vasttextText.evaluate(new MultiDataSetWrapperIterator(test));
-			
-			evaluationResults.put("Precision", evaluation.precision());
-			evaluationResults.put("Recall", evaluation.recall());
-			evaluationResults.put("MacroFscore", evaluation.f1(EvaluationAveraging.Macro));
-			evaluationResults.put("MicroFscore", evaluation.f1(EvaluationAveraging.Micro));
 			evaluationResults.put("ConfusionMatrix", evaluation.confusionMatrix());
 			evaluationResults.put("Labels", labels);
+			double macro=0.0;
+			double microNum=0.0;
+			double microDen=0.0;
+			int entryConfusion=0;
+			ConfusionMatrix<Integer> confusion = evaluation.getConfusion();
+			for(String label: labels)
+			{
+				evaluationResults.put("Precision"+label, evaluation.precision(labels.indexOf(label)));
+				evaluationResults.put("Recall"+label, evaluation.recall(labels.indexOf(label)));
+				evaluationResults.put("Fscore"+label, evaluation.f1(labels.indexOf(label)));
+				macro+=evaluation.f1(labels.indexOf(label));
+				for(String label2 :labels)
+				{
+					entryConfusion=confusion.getCount(labels.indexOf(label), labels.indexOf(label2));
+					if(label.equals(label2))
+						microNum+=entryConfusion;
+					microDen+=entryConfusion;
+				}
+			}
+			evaluationResults.put("MacroFscore", macro/labels.size());
+			if(microDen>0.0)
+				evaluationResults.put("MicroFscore", microNum/microDen);
+			else
+				evaluationResults.put("MicroFscore", 0.0);
 		}
 		
 		return evaluationResults;

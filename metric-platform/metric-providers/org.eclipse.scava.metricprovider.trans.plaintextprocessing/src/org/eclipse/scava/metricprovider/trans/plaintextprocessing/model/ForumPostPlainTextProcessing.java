@@ -18,11 +18,13 @@ public class ForumPostPlainTextProcessing extends Pongo {
 		TOPICID.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPostPlainTextProcessing");
 		POSTID.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPostPlainTextProcessing");
 		PLAINTEXT.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPostPlainTextProcessing");
+		HADREPLIES.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPostPlainTextProcessing");
 	}
 	
 	public static StringQueryProducer FORUMID = new StringQueryProducer("forumId"); 
 	public static StringQueryProducer TOPICID = new StringQueryProducer("topicId"); 
 	public static StringQueryProducer POSTID = new StringQueryProducer("postId"); 
+	public static StringQueryProducer HADREPLIES = new StringQueryProducer("hadReplies"); 
 	public static ArrayQueryProducer PLAINTEXT = new ArrayQueryProducer("plainText");
 	
 	
@@ -53,6 +55,15 @@ public class ForumPostPlainTextProcessing extends Pongo {
 		notifyChanged();
 		return this;
 	}
+	public boolean getHadReplies() {
+		return parseBoolean(dbObject.get("hadReplies")+"", false);
+	}
+	
+	public ForumPostPlainTextProcessing setHadReplies(boolean hadReplies) {
+		dbObject.put("hadReplies", hadReplies);
+		notifyChanged();
+		return this;
+	}
 	
 	public List<String> getPlainText() {
 		if (plainText == null) {
@@ -61,11 +72,11 @@ public class ForumPostPlainTextProcessing extends Pongo {
 		return plainText;
 	}
 	
+	
 	public ForumPostPlainTextProcessing setPlainText(List<String> plainText) {
 		dbObject.put("plainText", plainText);
 		this.plainText = plainText;
 		notifyChanged();
 		return this;	
 	}
-	
 }

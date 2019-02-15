@@ -15,9 +15,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemAttachment;
-import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemBug;
-import org.eclipse.scava.platform.delta.bugtrackingsystem.BugTrackingSystemComment;
 import org.eclipse.scava.repository.model.CommunicationChannel;
 
 public class CommunicationChannelDelta  implements Serializable {
@@ -50,7 +47,7 @@ public class CommunicationChannelDelta  implements Serializable {
 		this.communicationChannel = communicationChannel;
 	}
 	
-	public void setForum(CommunicationChannel channel) {
+	public void setForum(CommunicationChannel communicationChannel) {
 		this.communicationChannel = communicationChannel;
 	}
 	

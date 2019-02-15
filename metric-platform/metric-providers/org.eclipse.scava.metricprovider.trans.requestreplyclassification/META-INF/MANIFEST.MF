@@ -19,7 +19,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.scava.nlp.tools.other,
  org.eclipse.scava.nlp.classifiers.requestreplydetector;bundle-version="1.0.0",
  org.eclipse.scava.repository.model.cc.eclipseforums,
- org.eclipse.scava.nlp.tools.predictions
+ org.eclipse.scava.nlp.tools.predictions,
+ org.eclipse.scava.metricprovider.trans.plaintextprocessing,
+ org.eclipse.scava.nlp.tools.plaintext
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.eclipse.scava.metricprovider.trans.requestreplyclassification,

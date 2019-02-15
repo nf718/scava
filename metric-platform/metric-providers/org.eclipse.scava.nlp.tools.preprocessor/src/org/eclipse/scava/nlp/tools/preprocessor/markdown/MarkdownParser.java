@@ -43,23 +43,5 @@ public class MarkdownParser
 		text=newline.matcher(text).replaceAll("");
 		return text;
 	}
-	
-	public static void main(String[] args)
-	{
-		String input ="In directory `knowledge-base/org.eclipse.scava.knowledgebase`\n" + 
-				"When I run `mvn test` I get the following ~~error~~:\n" + 
-				"\n" + 
-				"```\n" + 
-				"[INFO] ------------------------------------------------------------------------\n" + 
-				"[INFO] BUILD FAILURE\n" + 
-				"[INFO] ------------------------------------------------------------------------\n" + 
-				"[INFO]\n"+
-				"```\n"+
-				"| Command | Description |\n" + 
-				"| --- | --- |\n" + 
-				"| `git status` | List all *new or modified* files |\n" + 
-				"| `git diff` | Show file differences that **haven't been** staged |\n";
-		System.out.println(parse(input));
-	}
 
 }

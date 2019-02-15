@@ -1,17 +1,18 @@
 package org.eclipse.scava.metricprovider.trans.plaintextprocessing;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.BugTrackerCommentPlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.ForumPostPlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing;
 import org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.PlainTextProcessingTransMetric;
-import org.eclipse.scava.nlp.tools.preprocessor.htmlparser.HtmlParser;
-import org.eclipse.scava.nlp.tools.preprocessor.markdown.MarkdownParser;
+import org.eclipse.scava.nlp.tools.plaintext.PlainTextObject;
+import org.eclipse.scava.nlp.tools.plaintext.bugtrackers.PlainTextBugTrackersOthers;
+import org.eclipse.scava.nlp.tools.plaintext.bugtrackers.PlainTextBugzilla;
+import org.eclipse.scava.nlp.tools.plaintext.bugtrackers.PlainTextGitHub;
+import org.eclipse.scava.nlp.tools.plaintext.communicationchannels.PlainTextEclipseForums;
+import org.eclipse.scava.nlp.tools.plaintext.communicationchannels.PlainTextNewsgroups;
 import org.eclipse.scava.platform.IMetricProvider;
 import org.eclipse.scava.platform.ITransientMetricProvider;
 import org.eclipse.scava.platform.MetricProviderContext;
@@ -38,9 +39,6 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 
 	protected PlatformBugTrackingSystemManager platformBugTrackingSystemManager;
 	protected PlatformCommunicationChannelManager communicationChannelManager;
-	
-	private Pattern escapedNewline = Pattern.compile("(\\\\n|\\\\r)");
-	private Pattern br = Pattern.compile("<br />");
 	
 	@Override
 	public String getIdentifier() {
@@ -100,6 +98,8 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 		clearDB(db);
 		System.err.println("Started " + getIdentifier());
 		
+		PlainTextObject plainTextObject;
+		
 		BugTrackingSystemProjectDelta btspDelta = projectDelta.getBugTrackingSystemDelta();
 		
 		for (BugTrackingSystemDelta bugTrackingSystemDelta : btspDelta.getBugTrackingSystemDeltas()) {
@@ -117,18 +117,20 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 					commentsData.setCommentId(comment.getCommentId());
 					db.getBugTrackerComments().add(commentsData);
 				}
-				List<String> plainText = new ArrayList<String>();
+				
+				
 				switch(bugTracker.getBugTrackerType())
 				{
 					//case "bitbucket" might be the same as GitHub
-					case "github": plainText=processGitHub(comment.getText()); break;
-					case "bugzilla": plainText=processBugzilla(comment.getText()); break;
+					case "github": plainTextObject=PlainTextGitHub.process(comment.getText()); break;
+					case "bugzilla": plainTextObject=PlainTextBugzilla.process(comment.getText()); break;
 					//case "jira":
 					//case "redmine":
 					//case "mantis":
-					default: plainText = processPlainText(comment.getText()); break;
+					default: plainTextObject=PlainTextBugTrackersOthers.process(comment.getText()); break;
 				}
-				commentsData.setPlainText(plainText);
+				commentsData.setPlainText(plainTextObject.getPlainTextAsList());
+				commentsData.setHadReplies(plainTextObject.hadReplies());
 			}
 			db.sync();
 		}
@@ -149,8 +151,9 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 						forumPostsData.setPostId(post.getPostId());
 						db.getForumPosts().add(forumPostsData);
 					}
-					List<String> plainText = processHTML(post.getText());
-					forumPostsData.setPlainText(plainText);
+					plainTextObject = PlainTextEclipseForums.process(post.getText());
+					forumPostsData.setPlainText(plainTextObject.getPlainTextAsList());
+					forumPostsData.setHadReplies(plainTextObject.hadReplies());
 				}
 			}
 			else
@@ -171,40 +174,14 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 						newsgroupArticlesData.setArticleNumber(article.getArticleNumber());
 						db.getNewsgroupArticles().add(newsgroupArticlesData);
 					}
-					List<String> plainText = processPlainText(article.getText());
-					newsgroupArticlesData.setPlainText(plainText);
+					plainTextObject = PlainTextNewsgroups.process(article.getText());
+					newsgroupArticlesData.setPlainText(plainTextObject.getPlainTextAsList());
+					newsgroupArticlesData.setHadReplies(plainTextObject.hadReplies());
 				}
 			}
 			db.sync();
 		}
 		
-	}
-	
-	private List<String> processGitHub(String text)
-	{
-		text = MarkdownParser.parse(text);
-		return processHTML(text);
-	}
-	
-	@Deprecated
-	//Temporal solution while we get a new version of Bugzilla?
-	private List<String> processBugzilla(String text)
-	{
-		List<String> textLines = Arrays.asList(text.split("\\h\\h+"));
-		return textLines;
-	}
-	
-	private List<String> processHTML(String text)
-	{
-		//In case the text contain escaped newlines
-		text=escapedNewline.matcher(text).replaceAll("");
-		return HtmlParser.parse(text);
-	}
-	
-	private List<String> processPlainText(String text)
-	{
-		List<String> textLines = Arrays.asList(text.split("\\v+"));
-		return textLines;
 	}
 	
 	private void clearDB(PlainTextProcessingTransMetric db) {

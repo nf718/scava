@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.13.0",
  org.eclipse.scava.nlp.tools.other,
  org.eclipse.scava.nlp.tools.core,
  org.eclipse.scava.nlp.resources.sentinet5,
- org.eclipse.scava.nlp.libraries.vasttext;bundle-version="1.0.0"
+ org.eclipse.scava.nlp.libraries.vasttext;bundle-version="1.0.0",
+ org.eclipse.scava.nlp.tools.preprocessor
 Bundle-Activator: org.eclipse.scava.nlp.emotionclassifier.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

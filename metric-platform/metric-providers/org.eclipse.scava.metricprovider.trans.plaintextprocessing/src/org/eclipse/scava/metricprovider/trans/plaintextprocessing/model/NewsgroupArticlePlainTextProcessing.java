@@ -17,10 +17,12 @@ public class NewsgroupArticlePlainTextProcessing extends Pongo {
 		NEWSGROUPNAME.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing");
 		ARTICLENUMBER.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing");
 		PLAINTEXT.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing");
+		HADREPLIES.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.NewsgroupArticlePlainTextProcessing");
 	}
 	
 	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsGroupName"); 
 	public static NumericalQueryProducer ARTICLENUMBER = new NumericalQueryProducer("articleNumber");
+	public static StringQueryProducer HADREPLIES = new StringQueryProducer("hadReplies"); 
 	public static ArrayQueryProducer PLAINTEXT = new ArrayQueryProducer("plainText");
 	
 	
@@ -42,6 +44,15 @@ public class NewsgroupArticlePlainTextProcessing extends Pongo {
 		notifyChanged();
 		return this;
 	}
+	public boolean getHadReplies() {
+		return parseBoolean(dbObject.get("hadReplies")+"", false);
+	}
+	
+	public NewsgroupArticlePlainTextProcessing setHadReplies(boolean hadReplies) {
+		dbObject.put("hadReplies", hadReplies);
+		notifyChanged();
+		return this;
+	}
 	
 	public List<String> getPlainText() {
 		if (plainText == null) {
@@ -56,5 +67,4 @@ public class NewsgroupArticlePlainTextProcessing extends Pongo {
 		notifyChanged();
 		return this;	
 	}
-	
 }

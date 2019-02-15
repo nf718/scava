@@ -7,6 +7,7 @@ import org.eclipse.scava.nlp.resources.sentinet5.SenticNet5;
 import org.eclipse.scava.nlp.tools.core.analyzer.NLPCoreAnalyzer;
 import org.eclipse.scava.nlp.tools.other.emoticons.EmoticonConverter;
 import org.eclipse.scava.nlp.tools.other.symbolconverter.SymbolConverter;
+import org.eclipse.scava.nlp.tools.preprocessor.normalizer.Normalizer;
 
 public class TextProcessor
 {
@@ -15,6 +16,7 @@ public class TextProcessor
 	
 	public TextProcessor(String text)
 	{
+		text = Normalizer.normalize(text);
 		text = EmoticonConverter.transform(text);
 		text = SymbolConverter.transform(text);
 		

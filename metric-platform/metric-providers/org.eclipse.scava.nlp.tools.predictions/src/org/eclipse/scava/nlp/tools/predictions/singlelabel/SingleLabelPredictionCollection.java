@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.scava.nlp.tools.predictions.externalExtra.ExternalExtraFeaturesObject;
+
 public class SingleLabelPredictionCollection
 {
 	List<SingleLabelPrediction> data;
 	Boolean idsSet=null;
 	boolean predictionSet=false;
+	Boolean extraSet=null;
+	Object typeExtraSet=null;
 		
 	public SingleLabelPredictionCollection()
 	{
@@ -26,6 +30,11 @@ public class SingleLabelPredictionCollection
 		return data.size();
 	}
 	
+	public Object getExternalExtraObjectClass()
+	{
+		return typeExtraSet;
+	}
+	
 	/**
 	 * NOTE: This method do not check ID uniqueness. Please ensure that the ID is unique before calling the method.
 	 * @param id 
@@ -35,8 +44,12 @@ public class SingleLabelPredictionCollection
 	{
 		if(idsSet==null)
 			idsSet=true;
+		if(extraSet==null)
+			extraSet=false;
 		else if(idsSet==false)
 			throw new IllegalArgumentException("Can't mix entries with id and without it.");
+		else if(extraSet==true)
+			throw new IllegalArgumentException("Can't mix entries with extra elements and without them.");
 		data.add(new SingleLabelPrediction(id, text));
 	}
 	
@@ -44,9 +57,49 @@ public class SingleLabelPredictionCollection
 	{
 		if(idsSet==null)
 			idsSet=false;
+		if(extraSet==null)
+			extraSet=false;
 		else if(idsSet==true)
 			throw new IllegalArgumentException("Can't mix entries with id and without it.");
+		else if(extraSet==true)
+			throw new IllegalArgumentException("Can't mix entries with extra external elements and without them.");
 		data.add(new SingleLabelPrediction(text));
+	}
+	
+	public void addText(String id, String text,  ExternalExtraFeaturesObject externalExtra)
+	{	
+		if(idsSet==null)
+			idsSet=true;
+		if(extraSet==null)
+		{
+			extraSet=true;
+			typeExtraSet=externalExtra.getClass();
+		}
+		else if(idsSet==false)
+			throw new IllegalArgumentException("Can't mix entries with id and without it.");
+		else if(extraSet==false)
+			throw new IllegalArgumentException("Can't mix entries with extra external elements and without them.");
+		else if(typeExtraSet!=externalExtra.getClass())
+			throw new IllegalArgumentException("Can't mix entries with different types of external extra objects.");
+		data.add(new SingleLabelPrediction(id, text, externalExtra));
+	}
+	
+	public void addText(String text,  ExternalExtraFeaturesObject externalExtra)
+	{
+		if(idsSet==null)
+			idsSet=false;
+		if(extraSet==null)
+		{
+			extraSet=true;
+			typeExtraSet=externalExtra.getClass();
+		}
+		else if(idsSet==true)
+			throw new IllegalArgumentException("Can't mix entries with id and without it.");
+		else if(extraSet==false)
+			throw new IllegalArgumentException("Can't mix entries with extra external elements and without them.");
+		else if(typeExtraSet!=externalExtra.getClass())
+			throw new IllegalArgumentException("Can't mix entries with different types of external extra objects.");
+		data.add(new SingleLabelPrediction(text, externalExtra));
 	}
 	
 	public List<String> getTextCollection()

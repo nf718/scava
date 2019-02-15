@@ -37,7 +37,7 @@ public class CodeDetector
 	
 	private static String formatter(String input)
 	{
-		input=Normalizer.normalize(input);
+		//input=Normalizer.normalize(input);
 		return CodeDetectorFormater.apply(input);
 	}
 	

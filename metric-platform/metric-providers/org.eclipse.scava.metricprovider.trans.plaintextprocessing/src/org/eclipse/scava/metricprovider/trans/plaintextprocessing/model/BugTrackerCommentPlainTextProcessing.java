@@ -18,11 +18,13 @@ public class BugTrackerCommentPlainTextProcessing extends Pongo {
 		BUGID.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.BugTrackerCommentPlainTextProcessing");
 		COMMENTID.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.BugTrackerCommentPlainTextProcessing");
 		PLAINTEXT.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.BugTrackerCommentPlainTextProcessing");
+		HADREPLIES.setOwningType("org.eclipse.scava.metricprovider.trans.plaintextprocessing.model.BugTrackerCommentPlainTextProcessing");
 	}
 	
 	public static StringQueryProducer BUGTRACKERID = new StringQueryProducer("bugTrackerId"); 
 	public static StringQueryProducer BUGID = new StringQueryProducer("bugId"); 
 	public static StringQueryProducer COMMENTID = new StringQueryProducer("commentId"); 
+	public static StringQueryProducer HADREPLIES = new StringQueryProducer("hadReplies"); 
 	public static ArrayQueryProducer PLAINTEXT = new ArrayQueryProducer("plainText");
 	
 	
@@ -53,6 +55,15 @@ public class BugTrackerCommentPlainTextProcessing extends Pongo {
 		notifyChanged();
 		return this;
 	}
+	public boolean getHadReplies() {
+		return parseBoolean(dbObject.get("hadReplies")+"", false);
+	}
+	
+	public BugTrackerCommentPlainTextProcessing setHadReplies(boolean hadReplies) {
+		dbObject.put("hadReplies", hadReplies);
+		notifyChanged();
+		return this;
+	}
 	
 	public List<String> getPlainText() {
 		if (plainText == null) {
@@ -61,7 +72,6 @@ public class BugTrackerCommentPlainTextProcessing extends Pongo {
 		return plainText;
 	}
 	
-	//Method by Adrián
 	public BugTrackerCommentPlainTextProcessing setPlainText(List<String> plainText) {
 		dbObject.put("plainText", plainText);
 		this.plainText = plainText;
