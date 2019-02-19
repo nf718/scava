@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 University of Manchester
+ * Copyright (c) 2018 Edge Hill University
  * 
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -19,6 +19,7 @@ public class GitHubComment extends BugTrackingSystemComment {
 
     private Date updatedAt;
     private String url;
+    
 
     public Date getUpdatedAt() {
         return updatedAt;
@@ -39,5 +40,7 @@ public class GitHubComment extends BugTrackingSystemComment {
     public static long getSerialversionuid() {
         return serialVersionUID;
     }
+
+    
 
 }

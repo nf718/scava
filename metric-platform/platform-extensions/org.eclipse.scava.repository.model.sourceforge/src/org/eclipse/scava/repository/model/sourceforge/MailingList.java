@@ -19,7 +19,15 @@ public class MailingList extends org.eclipse.scava.repository.model.Communicatio
 		super.setSuperTypes("org.eclipse.scava.repository.model.sourceforge.CommunicationChannel");
 	}
 	
-	
+	@Override
+	public String getCommunicationChannelType() {
+		return "SourceForgeMailingList";
+	}
+
+	@Override
+	public String getInstanceId() {
+		return "";
+	}	
 	
 	
 	

@@ -24,10 +24,7 @@ public class RedmineQueryManager extends org.eclipse.scava.repository.model.Comm
 		dbObject.put("queries", new BasicDBList());
 		super.setSuperTypes("org.eclipse.scava.repository.model.redmine.CommunicationChannel");
 	}
-	
-	
-	
-	
+
 	
 	public List<RedmineQuery> getQueries() {
 		if (queries == null) {
@@ -36,5 +33,13 @@ public class RedmineQueryManager extends org.eclipse.scava.repository.model.Comm
 		return queries;
 	}
 	
-	
+	@Override
+	public String getCommunicationChannelType() {
+		return "QueryManager";
+	}
+
+	@Override
+	public String getInstanceId() {
+		return "";
+	}
 }
