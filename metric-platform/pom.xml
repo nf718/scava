@@ -298,6 +298,31 @@
     	metric-providers/org.eclipse.scava.nlp.tools.vasttext
     </module>
     <module>../migration/third-party/org.jsoup.jsoup</module>
+    <module>factoids/org.eclipse.scava.factoid.forums.emotion</module>
+    <module>
+    	metric-providers/org.eclipse.scava.metricprovider.historic.forums.emotions
+    </module>
+    <module>
+    	metric-providers/org.eclipse.scava.metricprovider.trans.detectingcode
+    </module>
+    <module>
+    	metric-providers/org.eclipse.scava.metricprovider.trans.emotionclassification
+    </module>
+    <module>
+    	metric-providers/org.eclipse.scava.metricprovider.trans.forums.emotions
+    </module>
+    <module>
+    	metric-providers/org.eclipse.scava.metricprovider.trans.plaintextprocessing
+    </module>
+    <module>
+    	metric-providers/org.eclipse.scava.nlp.classifiers.emotion
+    </module>
+    <module>
+    	metric-providers/org.eclipse.scava.nlp.classifiers.requestreply
+    </module>
+    <module>
+    	metric-providers/org.eclipse.scava.nlp.classifiers.sentiment
+    </module>
   </modules>
   <build>
     <plugins>
