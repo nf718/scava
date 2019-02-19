@@ -31,7 +31,7 @@ class ExtraTextualFeaturesExtractor
 		mixed_repetition1=Pattern.compile("\\?!( ?(\\?|!))*"); //More than 2 ? contiguous
 		mixed_repetition2=Pattern.compile("!\\?( ?(!|\\?))*"); //More than 2 ? contiguous
 		
-		questionWords=Pattern.compile("(?<!\\w)(how|what|what's|whats|when|where|who|why)(?!\\w)", Pattern.CASE_INSENSITIVE);
+		questionWords=Pattern.compile("(?<!\\w)(how|what|what's|whats|when|where|who(se)?|why)(?!\\w)", Pattern.CASE_INSENSITIVE);
 		thanksWords=Pattern.compile("(?<!\\w)(thanks|thank|thanx|thx|cheers)(?!\\w)", Pattern.CASE_INSENSITIVE);
 		upvoteWords=Pattern.compile("(?<!\\w)upvot((e(s|d)?)|ing)(?!\\w)", Pattern.CASE_INSENSITIVE);
 		downvoteWords=Pattern.compile("(?<!\\w)downvot((e(s|d)?)|ing)(?!\\w)", Pattern.CASE_INSENSITIVE);
@@ -58,18 +58,23 @@ class ExtraTextualFeaturesExtractor
 				
 		//First token contains
 		counters.add((double) RegexFeaturesExtractor.findPattern(upvoteWords, textSplit[0]));
+		counters.add((double) RegexFeaturesExtractor.findPattern(downvoteWords, textSplit[0]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(exclamation, textSplit[0]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(question, textSplit[0]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(ellipsis, textSplit[0]));
+		counters.add((double) RegexFeaturesExtractor.findPattern(thanksWords, textSplit[0]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(questionWords, textSplit[0]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(emoticons, textSplit[0]));
 		
 		//Last token contains
+		counters.add((double) RegexFeaturesExtractor.findPattern(upvoteWords, textSplit[textSplit.length-1]));
+		counters.add((double) RegexFeaturesExtractor.findPattern(downvoteWords, textSplit[textSplit.length-1]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(exclamation, textSplit[textSplit.length-1]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(question, textSplit[textSplit.length-1]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(fullStop, textSplit[textSplit.length-1]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(ellipsis, textSplit[textSplit.length-1]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(thanksWords, textSplit[textSplit.length-1]));
+		counters.add((double) RegexFeaturesExtractor.findPattern(questionWords, textSplit[textSplit.length-1]));
 		counters.add((double) RegexFeaturesExtractor.findPattern(emoticons, textSplit[textSplit.length-1]));
 		
 		return counters;

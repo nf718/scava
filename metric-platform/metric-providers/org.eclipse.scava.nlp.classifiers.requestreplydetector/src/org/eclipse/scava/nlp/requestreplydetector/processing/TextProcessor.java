@@ -27,7 +27,7 @@ public class TextProcessor
 		
 		NLPCoreAnalyzer coreAnalyzedText = new NLPCoreAnalyzer(text);
 		
-		processedText=TextPostProcessor.apply(coreAnalyzedText.lemmatizeAsText());
+		processedText=TextPostProcessor.apply(coreAnalyzedText.tokenizedText());
 	}
 	
 	public TextProcessor(String text)

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.jsoup.Jsoup;
@@ -31,10 +32,12 @@ public class HtmlParser
 	
 	private static OutputSettings outputSettings= new OutputSettings();
 	private static String[] tagsToRemove= {"b","em","i","small","strong","sub","sup","ins","del","mark","span","a"};
+	private static Pattern newline;
 	
 	static
 	{
 		outputSettings.prettyPrint(false);
+		newline=Pattern.compile("(\\n|\\r)+");
 	}
 	
 	private static Whitelist whitelist()
@@ -125,6 +128,7 @@ public class HtmlParser
 	
 	private static void readNodes(List<Node> nodeList, List<String> textList)
 	{
+		String tempText;
 		for(Node node : nodeList)
 		{
 			if(node.childNodeSize()>0)
@@ -135,7 +139,10 @@ public class HtmlParser
 			{
 				if(node.nodeName().equals("#text"))
 				{
-					textList.add(((TextNode) node).getWholeText());
+					tempText=((TextNode) node).getWholeText();
+					tempText=newline.matcher(tempText).replaceAll("");
+					if(!tempText.isEmpty())
+						textList.add(tempText);
 				}
 			}
 		}

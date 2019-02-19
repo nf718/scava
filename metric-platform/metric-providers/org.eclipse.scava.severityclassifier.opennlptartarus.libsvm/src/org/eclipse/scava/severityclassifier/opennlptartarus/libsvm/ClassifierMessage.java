@@ -23,6 +23,7 @@ public class ClassifierMessage {
 	private String subject;
 	
 	private String forumId;
+	private String topicId;
 	private String postId;
 
 	private String text;
@@ -41,8 +42,8 @@ public class ClassifierMessage {
 			composedId = bugTrackerId+"#"+bugId;
 		else if ((newsgroupName!=null)&&(threadId!=0)) 
 			composedId = newsgroupName+"#"+threadId;
-		else if ((forumId != null) && (postId!=null))
-			composedId = forumId + "#" + postId;
+		else if ((forumId != null) && (topicId != null))
+			composedId = forumId + "#" + topicId;
 		else {
 			System.err.println("Unable to compose ID");
 		}
@@ -75,6 +76,17 @@ public class ClassifierMessage {
 	public void setForumId(String forumId)
 	{
 		this.forumId = forumId;
+		if (composedId!=null) setComposedId();
+	}
+	
+	public String getTopicId()
+	{
+		return topicId;
+	}
+	
+	public void setTopicId(String topicId)
+	{
+		this.topicId = topicId;
 		if (composedId!=null) setComposedId();
 	}
 
@@ -146,9 +158,12 @@ public class ClassifierMessage {
 		if (newsgroupName!=null)
 			return "ClassifierMessage " + "[newsgroupName=" + newsgroupName + ", threadId=" + threadId + 
 					", articleNumber=" + articleNumber + ", subject=" + subject + "]";
-		else
+		else if(bugTrackerId!=null)
 			return "ClassifierMessage "+ "[bugTrackerId=" + bugTrackerId + 
 					", bugId=" + bugId + ", commentId=" + commentId + ", subject=" + subject + "]";
+		else
+			return "ClassifierMessage "+ "[forumId=" + forumId + 
+					", topicId=" + topicId + ", postId=" + postId + ", subject=" + subject + "]";
 			
 	}
 

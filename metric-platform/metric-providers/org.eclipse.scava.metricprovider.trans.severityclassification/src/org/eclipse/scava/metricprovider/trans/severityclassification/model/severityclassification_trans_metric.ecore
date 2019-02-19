@@ -89,7 +89,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="forumId">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="postId">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topicId">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="severity">

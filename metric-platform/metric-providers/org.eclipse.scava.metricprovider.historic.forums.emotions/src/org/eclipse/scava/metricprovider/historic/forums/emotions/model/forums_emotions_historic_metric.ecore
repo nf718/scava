@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.eclipse.scava.metricprovider.historic.forums.emotions.model">
   <eClassifiers xsi:type="ecore:EClass" name="ForumsEmotionsHistoricMetric">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="forums" upperBound="-1" eType="//Forums" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="emotions" upperBound="-1" eType="//Emotion" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="forumEmotionData" upperBound="-1" eType="//ForumEmotionData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dimension" upperBound="-1" eType="//Dimension" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Forums">
+  <eClassifiers xsi:type="ecore:EClass" name="ForumEmotionData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="forumId">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topicId">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfPosts">
@@ -18,11 +15,8 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Emotion">
+  <eClassifiers xsi:type="ecore:EClass" name="Dimension">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="forumId">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topicId">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="emotionLabel">

@@ -32,6 +32,7 @@ import org.eclipse.scava.metricprovider.trans.requestreplyclassification.model.R
 import org.eclipse.scava.nlp.requestreplydetector.RequestReplyClassifier;
 import org.eclipse.scava.nlp.requestreplydetector.RequestReplyExternalExtraFeatures;
 import org.eclipse.scava.nlp.tools.plaintext.PlainTextObject;
+import org.eclipse.scava.nlp.tools.plaintext.communicationchannels.PlainTextNewsgroupsSubject;
 import org.eclipse.scava.nlp.tools.predictions.singlelabel.SingleLabelPredictionCollection;
 import org.eclipse.scava.platform.Date;
 import org.eclipse.scava.platform.IMetricProvider;
@@ -160,6 +161,8 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 		for ( CommunicationChannelDelta communicationChannelDelta: ccpDelta.getCommunicationChannelSystemDeltas())
 		{
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
+			String plainText;
+			String subject;
 			//Process for forums
 			if(communicationChannel instanceof EclipseForum)
 			{
@@ -169,7 +172,8 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 					if(postsInRequestReply == null)
 					{
 						postsInRequestReply = new ForumsPosts();
-						postsInRequestReply.setTopicId(post.getForumId());
+						postsInRequestReply.setForumId(communicationChannel.getOSSMeterId());
+						postsInRequestReply.setTopicId(post.getTopicId());
 						postsInRequestReply.setPostId(post.getPostId());
 						db.getForumPosts().add(postsInRequestReply);
 					}
@@ -178,7 +182,9 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 					plainTextObject=getPlainTextObject(plainTextMetric, postsInRequestReply);
 					hasCode=hasCode(detectingCodeMetric, postsInRequestReply);
 					classifierExtraFeatures = new RequestReplyExternalExtraFeatures(hasCode, plainTextObject.hadReplies());
-					instancesCollection.addText(getForumPostId(postsInRequestReply), plainTextObject.getPlainTextAsString(), classifierExtraFeatures);
+					plainText=plainTextObject.getPlainTextAsString();
+					subject=PlainTextNewsgroupsSubject.process(post.getSubject());
+					instancesCollection.addText(getForumPostId(postsInRequestReply), subject + " " + plainText , classifierExtraFeatures);
 				}
 				if(instancesCollection.size()>0)
 				{
@@ -193,20 +199,13 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 			}
 			else
 			{
-				String communicationChannelName;
-				if (!(communicationChannel instanceof NntpNewsGroup))
-					communicationChannelName = communicationChannel.getUrl();
-				else {
-					NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-					communicationChannelName = newsgroup.getNewsGroupName();
-				}
 				for (CommunicationChannelArticle article: communicationChannelDelta.getArticles())
 				{
-					NewsgroupArticles articleInRequestReply = findNewsgroupArticle(db,communicationChannelName, article);
+					NewsgroupArticles articleInRequestReply = findNewsgroupArticle(db, article);
 					if(articleInRequestReply == null)
 					{
 						articleInRequestReply = new NewsgroupArticles();
-						articleInRequestReply.setNewsgroupName(communicationChannelName);
+						articleInRequestReply.setNewsgroupName(communicationChannel.getOSSMeterId());
 						articleInRequestReply.setArticleNumber(article.getArticleNumber());
 						articleInRequestReply.setDate(new Date(article.getDate()).toString());
 						db.getNewsgroupArticles().add(articleInRequestReply);
@@ -216,7 +215,9 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 					plainTextObject=getPlainTextObject(plainTextMetric, articleInRequestReply);
 					hasCode=hasCode(detectingCodeMetric, articleInRequestReply);
 					classifierExtraFeatures = new RequestReplyExternalExtraFeatures(hasCode, plainTextObject.hadReplies());
-					instancesCollection.addText(getNewsgroupArticleId(articleInRequestReply), plainTextObject.getPlainTextAsString(), classifierExtraFeatures);
+					subject=PlainTextNewsgroupsSubject.process(article.getSubject());
+					plainText=plainTextObject.getPlainTextAsString();
+					instancesCollection.addText(getNewsgroupArticleId(articleInRequestReply), subject + " " + plainText , classifierExtraFeatures);
 				}
 				
 				if(instancesCollection.size()>0)
@@ -224,7 +225,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 					predictions=classify(instancesCollection);
 					for (CommunicationChannelArticle article: communicationChannelDelta.getArticles())
 					{
-						NewsgroupArticles articleInRequestReply = findNewsgroupArticle(db,communicationChannelName, article);
+						NewsgroupArticles articleInRequestReply = findNewsgroupArticle(db, article);
 						articleInRequestReply.setClassificationResult(predictions.get(getNewsgroupArticleId(articleInRequestReply)));
 						db.sync();
 					}
@@ -349,7 +350,8 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 		BugTrackerComments bugTrackerCommentsData = null;
 		Iterable<BugTrackerComments> bugTrackerCommentsDataIt = 
 		db.getBugTrackerComments().
-			find(BugTrackerComments.BUGID.eq(comment.getBugId()),
+			find(BugTrackerComments.BUGTRACKERID.eq(comment.getBugTrackingSystem().getOSSMeterId()),
+					BugTrackerComments.BUGID.eq(comment.getBugId()),
 					BugTrackerComments.COMMENTID.eq(comment.getCommentId()));
 		for (BugTrackerComments bcrr:  bugTrackerCommentsDataIt) {
 			bugTrackerCommentsData = bcrr;
@@ -357,13 +359,12 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 		return bugTrackerCommentsData;
 	}
 	
-	private NewsgroupArticles findNewsgroupArticle(RequestReplyClassificationTransMetric db, String communicationChannelName,
-			CommunicationChannelArticle article) {
+	private NewsgroupArticles findNewsgroupArticle(RequestReplyClassificationTransMetric db, CommunicationChannelArticle article) {
 		
 		NewsgroupArticles newsgroupArticles = null;
 		Iterable<NewsgroupArticles> newsgroupArticlesIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticles.NEWSGROUPNAME.eq(communicationChannelName), 
+						find(NewsgroupArticles.NEWSGROUPNAME.eq(article.getCommunicationChannel().getOSSMeterId()), 
 								NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticles narr:  newsgroupArticlesIt)
 		{
@@ -376,7 +377,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 		ForumsPosts forumPosts = null;
 		Iterable<ForumsPosts> forumPostsIt = 
 				db.getForumPosts().
-						find(ForumsPosts.FORUMID.eq(post.getForumId()),
+						find(ForumsPosts.FORUMID.eq(post.getCommunicationChannel().getOSSMeterId()),
 								ForumsPosts.TOPICID.eq(post.getTopicId()), 
 								ForumsPosts.POSTID.eq(post.getPostId()));
 		for (ForumsPosts fprr:  forumPostsIt)

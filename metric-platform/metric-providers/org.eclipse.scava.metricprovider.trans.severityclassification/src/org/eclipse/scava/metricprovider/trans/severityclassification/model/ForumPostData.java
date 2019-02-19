@@ -27,7 +27,7 @@ public class ForumPostData extends Pongo {
 		dbObject.put("charQuadgrams", new BasicDBList());
 		dbObject.put("charFivegrams", new BasicDBList());
 		FORUMID.setOwningType("org.eclipse.scava.metricprovider.trans.severityclassification.model.ForumPostData");
-		POSTID.setOwningType("org.eclipse.scava.metricprovider.trans.severityclassification.model.ForumPostData");
+		TOPICID.setOwningType("org.eclipse.scava.metricprovider.trans.severityclassification.model.ForumPostData");
 		SEVERITY.setOwningType("org.eclipse.scava.metricprovider.trans.severityclassification.model.ForumPostData");
 		UNIGRAMS.setOwningType("org.eclipse.scava.metricprovider.trans.severityclassification.model.ForumPostData");
 		BIGRAMS.setOwningType("org.eclipse.scava.metricprovider.trans.severityclassification.model.ForumPostData");
@@ -39,7 +39,7 @@ public class ForumPostData extends Pongo {
 	}
 	
 	public static StringQueryProducer FORUMID = new StringQueryProducer("forumId"); 
-	public static StringQueryProducer POSTID = new StringQueryProducer("postId"); 
+	public static StringQueryProducer TOPICID = new StringQueryProducer("topicId"); 
 	public static StringQueryProducer SEVERITY = new StringQueryProducer("severity"); 
 	public static ArrayQueryProducer UNIGRAMS = new ArrayQueryProducer("unigrams");
 	public static ArrayQueryProducer BIGRAMS = new ArrayQueryProducer("bigrams");
@@ -59,12 +59,12 @@ public class ForumPostData extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public String getPostId() {
-		return parseString(dbObject.get("postId")+"", "");
+	public String getTopicId() {
+		return parseString(dbObject.get("topicId")+"", "");
 	}
 	
-	public ForumPostData setPostId(String postId) {
-		dbObject.put("postId", postId);
+	public ForumPostData setTopicId(String topicId) {
+		dbObject.put("topicId", topicId);
 		notifyChanged();
 		return this;
 	}

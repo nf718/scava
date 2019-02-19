@@ -4,15 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.transform.OutputKeys;
 
 import org.eclipse.scava.platform.Date;
 import org.eclipse.scava.platform.communicationchannel.eclipseforums.utils.EclipseForumUtils;
@@ -21,7 +17,6 @@ import org.eclipse.scava.platform.delta.communicationchannel.CommunicationChanne
 import org.eclipse.scava.platform.delta.communicationchannel.ICommunicationChannelManager;
 import org.eclipse.scava.repository.model.CommunicationChannel;
 import org.eclipse.scava.repository.model.cc.eclipseforums.EclipseForum;
-
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -34,9 +29,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.Interceptor.Chain;
 
 public class EclipseForumsManager implements ICommunicationChannelManager<EclipseForum> {
 
@@ -315,6 +308,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 
 		getPostsBuilder.addQueryParameter("pagesize", PAGE_SIZE);
 
+
 		// A SIMPLE MECHANISIM FOR HANDLING CALL LIMITS/RESETS WITHOUT LOOSING DATA
 		if (this.callsRemaning == 0) {
 			waitUntilCallReset(this.timeToReset);
@@ -353,6 +347,7 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 	private EclipseForumsPost mapPost(JsonNode jsonNode, EclipseForum forum, EclipseForumsTopic topic) {
 
 		EclipseForumsPost eclipseForumsPost = new EclipseForumsPost();
+		eclipseForumsPost.setCommunicationChannel(forum);
 		eclipseForumsPost.setPostId(EclipseForumUtils.fixString(jsonNode.findValue("id").toString()));
 		eclipseForumsPost.setForumId(forum.getForum_id());// May remove this from suoer
 		eclipseForumsPost.setTopicId(topic.getTopic_id());
@@ -518,7 +513,8 @@ public class EclipseForumsManager implements ICommunicationChannelManager<Eclips
 		OkHttpClient.Builder newClient = new OkHttpClient.Builder();
 		System.out.println("[Eclipse Forum] - setClient()");
 		// If it has a client_id and Client_secert add an interceptor
-		if (!((eclipseForum.getClient_id() == null) && (eclipseForum.getClient_secret() == null))) {
+		if (eclipseForum.getClient_id().isEmpty() && eclipseForum.getClient_secret().isEmpty())
+		{
 
 			System.out.println("[Eclipse Forum] - Using authenticated Client");
 			// This is triggered every hour!

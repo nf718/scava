@@ -1,21 +1,19 @@
 package org.eclipse.scava.metricprovider.historic.forums.emotions.model;
 
 class ForumsEmotionsHistoricMetric {
-	val Forums[*] forums;
-	val Emotion[*] emotions;
+	val ForumEmotionData[*] forumEmotionData;
+	val Dimension[*] dimension;
 }
 
-class Forums {
-   	attr String forumId;
-   	attr String topicId;	
+class ForumEmotionData {
+   	attr String forumId;	
    	attr int numberOfPosts;
 	attr int cumulativeNumberOfPosts;
 }
 
 
-class Emotion {
+class Dimension {
    	attr String forumId;
-   	attr String topicId;
    	attr String emotionLabel;
 	attr int numberOfPosts;
 	attr int cumulativeNumberOfPosts;

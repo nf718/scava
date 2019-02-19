@@ -122,6 +122,16 @@ public class NntpNewsGroup extends org.eclipse.scava.repository.model.Communicat
 		notifyChanged();
 		return this;
 	}
+
+	@Override
+	public String getCommunicationChannelType() {
+		return "NNTPNewsgroup";
+	}
+
+	@Override
+	public String getInstanceId() {
+		return getNewsGroupName();
+	}
 	
 	
 	

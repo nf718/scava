@@ -139,6 +139,7 @@ public class DetectingCodeTransMetricProvider implements ITransientMetricProvide
 			if(postDataInDC == null)
 			{
 				postDataInDC = new ForumPostDetectingCode();
+				postDataInDC.setForumId(post.getForumId());
 				postDataInDC.setTopicId(post.getTopicId());
 				postDataInDC.setPostId(post.getPostId());
 				db.getForumPosts().add(postDataInDC);

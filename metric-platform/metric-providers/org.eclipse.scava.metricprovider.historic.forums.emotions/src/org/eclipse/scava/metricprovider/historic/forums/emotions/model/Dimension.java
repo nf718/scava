@@ -6,23 +6,21 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class Emotion extends Pongo {
+public class Dimension extends Pongo {
 	
 	
 	
-	public Emotion() { 
+	public Dimension() { 
 		super();
-		FORUMID.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Emotion");
-		TOPICID.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Emotion");
-		EMOTIONLABEL.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Emotion");
-		NUMBEROFPOSTS.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Emotion");
-		CUMULATIVENUMBEROFPOSTS.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Emotion");
-		PERCENTAGE.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Emotion");
-		CUMULATIVEPERCENTAGE.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Emotion");
+		FORUMID.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Dimension");
+		EMOTIONLABEL.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Dimension");
+		NUMBEROFPOSTS.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Dimension");
+		CUMULATIVENUMBEROFPOSTS.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Dimension");
+		PERCENTAGE.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Dimension");
+		CUMULATIVEPERCENTAGE.setOwningType("org.eclipse.scava.metricprovider.historic.forums.emotions.model.Dimension");
 	}
 	
 	public static StringQueryProducer FORUMID = new StringQueryProducer("forumId"); 
-	public static StringQueryProducer TOPICID = new StringQueryProducer("topicId"); 
 	public static StringQueryProducer EMOTIONLABEL = new StringQueryProducer("emotionLabel"); 
 	public static NumericalQueryProducer NUMBEROFPOSTS = new NumericalQueryProducer("numberOfPosts");
 	public static NumericalQueryProducer CUMULATIVENUMBEROFPOSTS = new NumericalQueryProducer("cumulativeNumberOfPosts");
@@ -34,17 +32,8 @@ public class Emotion extends Pongo {
 		return parseString(dbObject.get("forumId")+"", "");
 	}
 	
-	public Emotion setForumId(String forumId) {
+	public Dimension setForumId(String forumId) {
 		dbObject.put("forumId", forumId);
-		notifyChanged();
-		return this;
-	}
-	public String getTopicId() {
-		return parseString(dbObject.get("topicId")+"", "");
-	}
-	
-	public Emotion setTopicId(String topicId) {
-		dbObject.put("topicId", topicId);
 		notifyChanged();
 		return this;
 	}
@@ -52,7 +41,7 @@ public class Emotion extends Pongo {
 		return parseString(dbObject.get("emotionLabel")+"", "");
 	}
 	
-	public Emotion setEmotionLabel(String emotionLabel) {
+	public Dimension setEmotionLabel(String emotionLabel) {
 		dbObject.put("emotionLabel", emotionLabel);
 		notifyChanged();
 		return this;
@@ -61,7 +50,7 @@ public class Emotion extends Pongo {
 		return parseInteger(dbObject.get("numberOfPosts")+"", 0);
 	}
 	
-	public Emotion setNumberOfPosts(int numberOfPosts) {
+	public Dimension setNumberOfPosts(int numberOfPosts) {
 		dbObject.put("numberOfPosts", numberOfPosts);
 		notifyChanged();
 		return this;
@@ -70,7 +59,7 @@ public class Emotion extends Pongo {
 		return parseInteger(dbObject.get("cumulativeNumberOfPosts")+"", 0);
 	}
 	
-	public Emotion setCumulativeNumberOfPosts(int cumulativeNumberOfPosts) {
+	public Dimension setCumulativeNumberOfPosts(int cumulativeNumberOfPosts) {
 		dbObject.put("cumulativeNumberOfPosts", cumulativeNumberOfPosts);
 		notifyChanged();
 		return this;
@@ -79,7 +68,7 @@ public class Emotion extends Pongo {
 		return parseFloat(dbObject.get("percentage")+"", 0.0f);
 	}
 	
-	public Emotion setPercentage(float percentage) {
+	public Dimension setPercentage(float percentage) {
 		dbObject.put("percentage", percentage);
 		notifyChanged();
 		return this;
@@ -88,7 +77,7 @@ public class Emotion extends Pongo {
 		return parseFloat(dbObject.get("cumulativePercentage")+"", 0.0f);
 	}
 	
-	public Emotion setCumulativePercentage(float cumulativePercentage) {
+	public Dimension setCumulativePercentage(float cumulativePercentage) {
 		dbObject.put("cumulativePercentage", cumulativePercentage);
 		notifyChanged();
 		return this;

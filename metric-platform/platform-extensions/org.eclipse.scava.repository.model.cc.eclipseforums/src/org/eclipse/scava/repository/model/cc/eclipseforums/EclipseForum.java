@@ -1,9 +1,6 @@
 package org.eclipse.scava.repository.model.cc.eclipseforums;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class EclipseForum extends org.eclipse.scava.repository.model.CommunicationChannel {
@@ -23,7 +20,6 @@ public class EclipseForum extends org.eclipse.scava.repository.model.Communicati
 	public static StringQueryProducer CLIENT_SECRET = new StringQueryProducer("client_secret"); 
 	public static StringQueryProducer FORUM_ID = new StringQueryProducer("forum_id"); 
 	public static StringQueryProducer FORUM_NAME = new StringQueryProducer("forum_name"); 
-	
 	
 	public String getClient_id() {
 		return parseString(dbObject.get("client_id")+"", "");
@@ -60,6 +56,16 @@ public class EclipseForum extends org.eclipse.scava.repository.model.Communicati
 		dbObject.put("forum_name", forum_name);
 		notifyChanged();
 		return this;
+	}
+
+	@Override
+	public String getCommunicationChannelType() {
+		return "EclipseForums";
+	}
+
+	@Override
+	public String getInstanceId() {
+		return getForum_name() + "/" + getForum_id();
 	}
 	
 	

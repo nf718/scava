@@ -7,13 +7,14 @@
  * 
  * SPDX-License-Identifier: EPL-2.0
  ******************************************************************************/
+//Adrián was here
 package org.eclipse.scava.metricprovider.historic.forums.emotions;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.scava.metricprovider.historic.forums.emotions.model.Emotion;
-import org.eclipse.scava.metricprovider.historic.forums.emotions.model.Forums;
+import org.eclipse.scava.metricprovider.historic.forums.emotions.model.Dimension;
+import org.eclipse.scava.metricprovider.historic.forums.emotions.model.ForumEmotionData;
 import org.eclipse.scava.metricprovider.historic.forums.emotions.model.ForumsEmotionsHistoricMetric;
 import org.eclipse.scava.metricprovider.trans.forums.emotions.EmotionsTransMetricProvider;
 import org.eclipse.scava.metricprovider.trans.forums.emotions.model.EmotionDimension;
@@ -60,17 +61,17 @@ public class EmotionsHistoricMetricProvider extends AbstractHistoricalMetricProv
 			ForumsEmotionsTransMetric usedEmotions = ((EmotionsTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 			 for (ForumEmotionsData forumDataInEmotions: usedEmotions.getForums())
 			 {
-				 Forums forums = new Forums();
-				 emotions.getForums().add(forums);
-				 forums.setTopicId(forumDataInEmotions.getTopicId());
+				 ForumEmotionData forums = new ForumEmotionData();
+				 emotions.getForumEmotionData().add(forums);
+				 forums.setForumId(forumDataInEmotions.getForumId());
 				 forums.setCumulativeNumberOfPosts(forumDataInEmotions.getCumulativeNumberOfPosts());
 				 forums.setNumberOfPosts(forumDataInEmotions.getNumberOfPosts());
 			 }
 			 
 			 for (EmotionDimension emotionDimension: usedEmotions.getDimensions()) {
-				 Emotion emotion = new Emotion();
-				 emotions.getEmotions().add(emotion);
-				 emotion.setTopicId(emotionDimension.getTopicId());
+				 Dimension emotion = new Dimension();
+				 emotions.getDimension().add(emotion);
+				 emotion.setForumId(emotionDimension.getForumId());
 				 emotion.setEmotionLabel(emotionDimension.getEmotionLabel());
 				 emotion.setCumulativeNumberOfPosts(emotionDimension.getCumulativeNumberOfPosts());
 				 emotion.setCumulativePercentage(emotionDimension.getCumulativePercentage());

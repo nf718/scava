@@ -357,8 +357,8 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 		ClassificationInstance classificationInstance = classifier.getClassificationInstance(classifierMessage);
 		
 		ForumPostData forumPostData = new ForumPostData();
-		forumPostData.setForumId(post.getForumId());
-		forumPostData.setPostId(post.getPostId());
+		forumPostData.setForumId(post.getCommunicationChannel().getOSSMeterId());
+		forumPostData.setTopicId(post.getTopicId());
 		forumPostData.setSeverity(severity);
 		
 		for (int unigramId: classifier.getUnigramOrders(classificationInstance.getUnigrams()))
@@ -494,7 +494,8 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 	
 	private ClassifierMessage prepareForumPostClassifierMessage(CommunicationChannelForumPost post, DetectingCodeTransMetric db) {
 		ClassifierMessage classifierMessage = prepareForumPostClassifierMessage(post);
-		classifierMessage.setPostId(post.getPostId());
+		classifierMessage.setForumId(post.getCommunicationChannel().getOSSMeterId());
+		classifierMessage.setTopicId(post.getTopicId());
 		String naturalLanguage = naturalLanguageForumPost(db, post);
 		if (naturalLanguage == null) {
 			classifierMessage.setText("");			
@@ -506,7 +507,8 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 	
 	private ClassifierMessage prepareForumPostClassifierMessage(CommunicationChannelForumPost post) {
 		ClassifierMessage classifierMessage = new ClassifierMessage();
-		classifierMessage.setForumId(post.getForumId());
+		classifierMessage.setForumId(post.getCommunicationChannel().getOSSMeterId());
+		classifierMessage.setTopicId(post.getTopicId());
 		return classifierMessage;
 	}
 	
@@ -532,10 +534,10 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 	
 	private ForumPostData findForumPost(SeverityClassificationTransMetric db, CommunicationChannelForumPost post) {
 		ForumPostData forumPostsData = null;
-		//We just look for the forumID (in the future as wel for the TopicID) because, we want to get the n-grams from previous posts
 		Iterable<ForumPostData> forumPostsDataIt = 
 				db.getForumPosts().
-				find(ForumPostData.FORUMID.eq(post.getForumId()));  
+				find(ForumPostData.FORUMID.eq(post.getCommunicationChannel().getOSSMeterId()),
+						ForumPostData.TOPICID.eq(post.getTopicId()));  
 		for (ForumPostData fps:  forumPostsDataIt) {
 			forumPostsData = fps;
 		}
@@ -544,8 +546,10 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 	
 	private String naturalLanguageForumPost(DetectingCodeTransMetric db, CommunicationChannelForumPost post) {
 		ForumPostDetectingCode forumPostInDetectionCode = null;
+		
 		Iterable<ForumPostDetectingCode> forumPostIt = db.getForumPosts().
-				find(ForumPostDetectingCode.FORUMID.eq(post.getForumId()),
+				find(ForumPostDetectingCode.FORUMID.eq(post.getCommunicationChannel().getOSSMeterId()),
+						ForumPostDetectingCode.TOPICID.eq(post.getTopicId()),
 						ForumPostDetectingCode.POSTID.eq(post.getPostId()));
 		for (ForumPostDetectingCode fpdc:  forumPostIt) {
 			forumPostInDetectionCode = fpdc;
@@ -556,7 +560,8 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 	private String naturalLanguageBugTrackerComment(DetectingCodeTransMetric db, BugTrackingSystemComment comment) {
 		BugTrackerCommentDetectingCode bugtrackerCommentInDetectionCode = null;
 		Iterable<BugTrackerCommentDetectingCode> bugtrackerCommentIt = db.getBugTrackerComments().
-				find(BugTrackerCommentDetectingCode.BUGID.eq(comment.getBugId()),
+				find(BugTrackerCommentDetectingCode.BUGTRACKERID.eq(comment.getBugTrackingSystem().getOSSMeterId()),
+						BugTrackerCommentDetectingCode.BUGID.eq(comment.getBugId()),
 						BugTrackerCommentDetectingCode.COMMENTID.eq(comment.getCommentId()));
 		for (BugTrackerCommentDetectingCode btcdc:  bugtrackerCommentIt) {
 			bugtrackerCommentInDetectionCode = btcdc;

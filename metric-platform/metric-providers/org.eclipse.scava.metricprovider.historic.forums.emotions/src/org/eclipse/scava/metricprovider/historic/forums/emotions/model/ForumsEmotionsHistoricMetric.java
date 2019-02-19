@@ -8,31 +8,31 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class ForumsEmotionsHistoricMetric extends Pongo {
 	
-	protected List<Forums> forums = null;
-	protected List<Emotion> emotions = null;
+	protected List<ForumEmotionData> forumEmotionData = null;
+	protected List<Dimension> dimension = null;
 	
 	
 	public ForumsEmotionsHistoricMetric() { 
 		super();
-		dbObject.put("forums", new BasicDBList());
-		dbObject.put("emotions", new BasicDBList());
+		dbObject.put("forumEmotionData", new BasicDBList());
+		dbObject.put("dimension", new BasicDBList());
 	}
 	
 	
 	
 	
 	
-	public List<Forums> getForums() {
-		if (forums == null) {
-			forums = new PongoList<Forums>(this, "forums", true);
+	public List<ForumEmotionData> getForumEmotionData() {
+		if (forumEmotionData == null) {
+			forumEmotionData = new PongoList<ForumEmotionData>(this, "forumEmotionData", true);
 		}
-		return forums;
+		return forumEmotionData;
 	}
-	public List<Emotion> getEmotions() {
-		if (emotions == null) {
-			emotions = new PongoList<Emotion>(this, "emotions", true);
+	public List<Dimension> getDimension() {
+		if (dimension == null) {
+			dimension = new PongoList<Dimension>(this, "dimension", true);
 		}
-		return emotions;
+		return dimension;
 	}
 	
 	

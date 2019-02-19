@@ -94,10 +94,7 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<For
 			CommunicationChannel communicationChannel = communicationChannelSystemDelta.getCommunicationChannel();
 			String communicationChannelId;
 			if(communicationChannel instanceof EclipseForum)
-			{
-				EclipseForum forum = (EclipseForum) communicationChannel;
-				communicationChannelId = forum.getForum_id();	
-			}
+				communicationChannelId = communicationChannel.getOSSMeterId();	
 			else
 				continue;
 			
@@ -184,7 +181,7 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<For
 	private List<String> getEmotions(EmotionClassificationTransMetric db, CommunicationChannelForumPost post) {
 		ForumPostEmotionClassification forumPostInEmotionClassification = null;
 		Iterable<ForumPostEmotionClassification> forumPostIt = db.getForumPosts().
-				find(ForumPostEmotionClassification.FORUMID.eq(post.getForumId()),
+				find(ForumPostEmotionClassification.FORUMID.eq(post.getCommunicationChannel().getOSSMeterId()),
 						ForumPostEmotionClassification.TOPICID.eq(post.getTopicId()),
 						ForumPostEmotionClassification.POSTID.eq(post.getPostId()));
 		for (ForumPostEmotionClassification nadc:  forumPostIt) {

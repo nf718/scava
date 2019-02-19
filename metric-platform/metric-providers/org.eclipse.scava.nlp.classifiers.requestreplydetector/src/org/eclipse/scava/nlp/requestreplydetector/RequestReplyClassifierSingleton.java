@@ -42,7 +42,7 @@ class RequestReplyClassifierSingleton
 		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
 		if (path.endsWith("bin/"))
 			path = path.substring(0, path.lastIndexOf("bin/"));
-		File file= new File(path+"model/VastText_Code_lemma_model.zip");
+		File file= new File(path+"model/VastText_Code_no_lemma_model.zip");
 		checkModelFile(file.toPath());
 		requestReplyClassifier.loadModel(file);
 	}

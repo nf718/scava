@@ -45,7 +45,7 @@ class NewsgroupThreadData {
 
 class ForumPostData {
 	attr String forumId;
-   	attr String postId;
+	attr String topicId;
    	attr String severity;
 	attr int[*] unigrams;
 	attr int[*] bigrams;

@@ -11,7 +11,7 @@ public class PlainTextEclipseForums
 	
 	static
 	{
-		escapedNewline = Pattern.compile("(\\\\n|\\\\r)");
+		escapedNewline = Pattern.compile("(\\\\n|\\\\r)+");
 	}
 	
 	public static PlainTextObject process(String text)

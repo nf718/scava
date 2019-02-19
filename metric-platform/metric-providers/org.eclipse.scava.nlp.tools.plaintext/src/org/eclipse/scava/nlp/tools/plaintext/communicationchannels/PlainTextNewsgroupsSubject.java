@@ -19,7 +19,7 @@ public class PlainTextNewsgroupsSubject
 		subject4= Pattern.compile("=20");
 	}
 	
-	public String process(String subject)
+	public static String process(String subject)
 	{
 		subject=subject1.matcher(subject).replaceAll("==");
 		subject=subject2.matcher(subject).replaceAll("");

@@ -147,7 +147,8 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 					if(forumPostsData == null)
 					{
 						forumPostsData = new ForumPostPlainTextProcessing();
-						forumPostsData.setTopicId(post.getForumId());//To change in the future
+						forumPostsData.setForumId(communicationChannel.getOSSMeterId());
+						forumPostsData.setTopicId(post.getTopicId());
 						forumPostsData.setPostId(post.getPostId());
 						db.getForumPosts().add(forumPostsData);
 					}
@@ -195,7 +196,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 		BugTrackerCommentPlainTextProcessing bugTrackerCommentsData = null;
 		Iterable<BugTrackerCommentPlainTextProcessing> bugTrackerCommentsDataIt = 
 				db.getBugTrackerComments().
-						find(BugTrackerCommentPlainTextProcessing.BUGTRACKERID.eq(comment.getBugTrackingSystem().getId()), 
+						find(BugTrackerCommentPlainTextProcessing.BUGTRACKERID.eq(comment.getBugTrackingSystem().getOSSMeterId()), 
 								BugTrackerCommentPlainTextProcessing.BUGID.eq(comment.getBugId()),
 								BugTrackerCommentPlainTextProcessing.COMMENTID.eq(comment.getCommentId()));
 		for (BugTrackerCommentPlainTextProcessing bcd:  bugTrackerCommentsDataIt) {
@@ -209,7 +210,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 		NewsgroupArticlePlainTextProcessing newsgroupArticlesData = null;
 		Iterable<NewsgroupArticlePlainTextProcessing> newsgroupArticlesDataIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticlePlainTextProcessing.NEWSGROUPNAME.eq(article.getCommunicationChannel().getName()), 
+						find(NewsgroupArticlePlainTextProcessing.NEWSGROUPNAME.eq(article.getCommunicationChannel().getNewsGroupName()), 
 								NewsgroupArticlePlainTextProcessing.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticlePlainTextProcessing nad:  newsgroupArticlesDataIt) {
 			newsgroupArticlesData = nad;
@@ -221,7 +222,7 @@ public class PlainTextProcessingTransMetricProvider implements ITransientMetricP
 		ForumPostPlainTextProcessing forumPostsData = null;
 		Iterable<ForumPostPlainTextProcessing> forumPostsDataIt = 
 		db.getForumPosts().
-				find(ForumPostPlainTextProcessing.FORUMID.eq(post.getForumId()),
+				find(ForumPostPlainTextProcessing.FORUMID.eq(post.getCommunicationChannel().getOSSMeterId()),
 						ForumPostPlainTextProcessing.TOPICID.eq(post.getTopicId()), 
 						ForumPostPlainTextProcessing.POSTID.eq(post.getPostId()));
 		for (ForumPostPlainTextProcessing fpd:  forumPostsDataIt) {
