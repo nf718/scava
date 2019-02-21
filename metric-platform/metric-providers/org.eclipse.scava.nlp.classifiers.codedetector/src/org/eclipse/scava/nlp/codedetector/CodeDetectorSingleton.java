@@ -48,6 +48,8 @@ class CodeDetectorSingleton
 		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
 		if (path.endsWith("bin/"))
 			path = path.substring(0, path.lastIndexOf("bin/"));
+		if (path.endsWith("target/classes/"))
+			path = path.substring(0, path.lastIndexOf("target/classes/"));
 		File file= new File(path+"model/model_Mixed_sentences_all.bin");
 		checkModelFile(file.toPath());
 		return factory.load(file.toString());

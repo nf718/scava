@@ -92,6 +92,8 @@ class SenticNet5Singleton
 		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
 		if (path.endsWith("bin/"))
 			path = path.substring(0, path.lastIndexOf("bin/"));
+		if (path.endsWith("target/classes/"))
+			path = path.substring(0, path.lastIndexOf("target/classes/"));
 		File file= new File(path+"lexicon/SenticNet5Lexicon.txt");
 		checkModelFile(file.toPath());
 		return new BufferedReader(new FileReader(file));

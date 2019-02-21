@@ -32,7 +32,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/deeplearning4j-datavec-iterators-1.0.0-beta2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deeplearning4j-modelimport-1.0.0-beta2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deeplearning4j-nlp-1.0.0-beta2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/deeplearning4j-nn-1.0.0-beta2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/deeplearning4j-nn-1.0.0-beta2.jar" sourcepath="//c1staffhome1/STAFFHOME1/Diegol/Desktop/deeplearning4j-nn-1.0.0-beta2-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deeplearning4j-tsne-1.0.0-beta2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deeplearning4j-ui-components-1.0.0-beta2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/deeplearning4j-util-1.0.0-beta2.jar"/>

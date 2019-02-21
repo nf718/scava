@@ -72,13 +72,23 @@ public class GitHubManager implements IBugTrackingSystemManager<GitHubBugTracker
 
 		GitHubBugTrackingSystemDelta delta = new GitHubBugTrackingSystemDelta();
 		delta.setBugTrackingSystem(ghbt);
-		
+		if(issueCommentsList.isEmpty() && pullRequestCommentList.isEmpty())
+			getAllData(ghbt, getFirstDate(db, ghbt), date);	
 		getIssuesOnDay(ghbt, date, delta);
 		getPullRequestsOnDay(ghbt, date, delta);
 		getCommentsOnDay(ghbt, date, delta);
 		
 		
 		return delta;
+	}
+	
+	private void getAllData(GitHubBugTracker ghbt, Date earlistDate, Date analysisDate) throws Exception
+	{
+		if(earlistDate.compareTo(analysisDate)<0)
+			getAllData(ghbt, analysisDate);
+		else
+			getAllData(ghbt, earlistDate);
+		
 	}
 
 	@Override
@@ -91,7 +101,7 @@ public class GitHubManager implements IBugTrackingSystemManager<GitHubBugTracker
 		 */
 
 		Date earliestDate = getEarliestIssueDate(ghbt);
-		getAllData(ghbt, earliestDate);
+		//getAllData(ghbt, earliestDate);
 
 		return earliestDate;
 	}
